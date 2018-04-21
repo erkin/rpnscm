@@ -1,5 +1,5 @@
 ;; -*- coding: utf-8-unix; mode: scheme -*-
-(use data-structures)
+(use data-structures srfi-13)
 
 (define dyadic '("+" "-" "*" "/" "expt" "modulo" "remainder" "quotient"))
 (define monadic '("abs" "floor" "ceiling" "round" "truncate"
@@ -25,8 +25,12 @@
          (print "Error: Invalid operator: " token)
          (exit 2))))
 
+(define step-padding
+  (+ 1 (quotient 10 (length (string-split (cadr (argv)))))))
+
 (define (calc exp stack step)
-  (print step ": " exp " ⇒ " stack)
+  (display (string-pad (number->string step) step-padding))
+  (print ": " exp " ⇒ " stack)
   (if (not (null? exp))
       (let ((token (string->number (car exp))))
         (if token
@@ -42,7 +46,8 @@
     (calculate (string-split (cadr (argv))))
     (begin
       (print "Usage: rpn EXPRESSION")
-      (print "Expression must be in the form of a quote-enclosed string with whitespace-separated tokens.")
+      (display "Expression must be in the form of a quote-enclosed")
+      (print " string with whitespace-separated tokens.")
       (newline)
       (print "Accepted operators:")
       (print " i: " monadic)
