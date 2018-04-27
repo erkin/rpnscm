@@ -3,7 +3,7 @@ A primitive RPN calculator written in CHICKEN Scheme.
 
 *** Usage:
 #+BEGIN_EXAMPLE
-rpn "EXPRESSION"
+rpn -e "EXPRESSION"
 #+END_EXAMPLE
 *** Example:
 #+BEGIN_EXAMPLE
