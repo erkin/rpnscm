@@ -1,11 +1,11 @@
-* RPNSCM v0.4
+* RPNSCM v0.5
 A primitive RPN calculator made in Scheme.
 
 *** Usage:
-=rpn EXPRESSION=
+=rpn "EXPRESSION"=
 *** Example:
 #+BEGIN_EXAMPLE
-./rpn "4 3 modulo 7 7 * * sqrt 7 -"
+./rpn -e "4 3 modulo 7 7 * * sqrt 7 -"
 
 Input: (4 3 modulo 7 7 * * sqrt 7 -)
 0: (4 3 modulo 7 7 * * sqrt 7 -) ⇒ ()
