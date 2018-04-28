@@ -9,10 +9,6 @@
 (define (usage)
   (print "Usage: " (car (argv)) " -e \"EXPRESSION\"")
   (print (args:usage opts))
-  (print "Accepted operators:")
-  (print " i: " (car operators))
-  (print "ii: " (cadr operators))
-  (print " n: " (caddr operators))
   (newline))
 
 (define opts
