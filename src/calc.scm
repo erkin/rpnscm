@@ -1,8 +1,10 @@
 (module rpn (calculate operators)
   (import chicken scheme)
+  (use (only srfi-13 string-pad))
   
   (define operators '((+ . +) (- . -) (* . *) (/ . quotient)
                       (^ . expt) (% . remainder)))
+  (define padding 0)
   
   (define (err message code)
     (print "Error: " message)
@@ -44,13 +46,16 @@
        (cddr stack)))))
   
   (define (calc exp stack step)
-    (print step ": " exp " ⇒ " stack)
+    (display (string-pad (number->string step) padding))
+    (print ": " exp " ⇒ " stack)
     (if (null? exp)
         stack
         (let ((token (car exp)))
           (calc (cdr exp) (work token stack) (+ 1 step)))))
 
   (define (calculate exp)
+    (set! padding (+ 1 (quotient (length exp) 10)))
+    (print (length exp))
     (print "Input: " exp)
     (print "Output: " (calc (exp-check exp '()) '() 0))
     (exit)))
