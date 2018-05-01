@@ -1,7 +1,7 @@
 (module rpn (calculate operators)
   (import chicken scheme)
-  (use (only srfi-13 string-pad))
-  
+  (require-extension (only srfi-13 string-pad string-tokenize))
+
   (define operators '((+ . +) (- . -) (* . *) (/ . quotient)
                       (^ . expt) (% . remainder)))
   (define padding 0)
@@ -53,9 +53,9 @@
         (let ((token (car exp)))
           (calc (cdr exp) (work token stack) (+ 1 step)))))
 
-  (define (calculate exp)
-    (set! padding (+ 1 (quotient (length exp) 10)))
-    (print (length exp))
-    (print "Input: " exp)
-    (print "Output: " (calc (exp-check exp '()) '() 0))
-    (exit)))
+  (define (calculate arg)
+    (let ((exp (string-tokenize arg)))
+      (set! padding (+ 1 (quotient (length exp) 10)))
+      (print "Input: " exp)
+      (print "Output: " (calc (exp-check exp '()) '() 0))
+      (exit))))
