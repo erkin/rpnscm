@@ -1,6 +1,7 @@
 (use system)
 (define-system rpn
-  (scheme-file "calc")
-  (scheme-file "rpn" depends: '("calc")))
+  (scheme-file "op")
+  (scheme-file "parse" depends: '("op"))
+  (scheme-file "main" depends: '("parse")))
 
 (load-system rpn quiet: #t)
