@@ -1,4 +1,4 @@
-* RPNSCM v0.6
+* RPNSCM v0.7
 A primitive RPN calculator written in CHICKEN Scheme.
 
 *** Usage
