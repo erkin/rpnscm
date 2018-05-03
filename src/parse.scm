@@ -2,10 +2,10 @@
   (import chicken scheme)
   (require-extension (only srfi-13 string-pad string-tokenize))
   (import rpn-op)
-  
+
   (define padding 0)
   (define verbose #t)
-  
+
   (define (err-with-value message value code)
     (print "Error: " message value)
     (exit code))
@@ -31,15 +31,19 @@
                   (int-check value)
                   (sym-check value)))))
         new-exp))
-  
+
+  (define (verbose-print exp stack step)
+    (display (string-pad (number->string step) padding))
+    (print ": " (cdr exp) " -> " (car exp) " -> " stack))
+
   (define (calc-step exp stack step)
-    (if (null? exp)
-        stack)
-    (if verbose
-        (begin
-          (display (string-pad (number->string step) padding))
-          (print ": " (cdr exp) " ⇒ " (car exp) " ⇒ " stack)))
-    (calc-step (cdr exp) (rpn-eval (car exp) stack) (+ 1 step)))
+    (cond
+     ((null? exp)
+      stack)
+     (else
+      (if verbose
+          (verbose-print exp stack step))
+      (calc-step (cdr exp) (rpn-eval (car exp) stack) (+ 1 step)))))
 
   (define (rpn-calculate arg quiet)
     (set! verbose (not quiet))

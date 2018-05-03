@@ -1,6 +1,7 @@
-#!/usr/bin/env csi -nq -ss --
+#!/usr/bin/csi -ss
+
 (use args system)
-(load "rpnscm.system")
+(load "rpn.system")
 (load-system rpn quiet: #t)
 (import rpn-parse)
 
@@ -41,6 +42,5 @@
                      (rpn-interactive))
    (args:make-option (q quiet) #:none "Quiet mode"
                      (set! quiet #t))))
-(define (main)
-  (print (command-line-arguments))
-  (args:parse (command-line-arguments) opts))
+(define (main options)
+  (args:parse options opts))

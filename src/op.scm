@@ -1,4 +1,4 @@
-(module rpn-op *;(rpn-eval operators) 
+(module rpn-op (rpn-eval operators) 
   (import chicken scheme)
 
   (define monadic '((~ . rpn-neg) (a . rpn-abs) (d . rpn-dup) (p . rpn-pop)))

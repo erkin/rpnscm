@@ -3,7 +3,7 @@ A primitive RPN calculator written in CHICKEN Scheme.
 
 ** Note
     This is the development branch for the alist-based version.
-    It only supports exact integers and basic dyadic operations until I implement precision.
+    It only supports exact integers and basic operations until I implement precision.
 
 ** Eggs
    * =srfi-13= (for =string-pad= & =string-tokenize=)
@@ -11,13 +11,12 @@ A primitive RPN calculator written in CHICKEN Scheme.
 
 ** Usage
 #+BEGIN_EXAMPLE
-csc rpnscm.system
-./rpnscm -e "EXPRESSION"
+./rpn.scm -e "EXPRESSION"
 #+END_EXAMPLE
     
 *** Example
 #+BEGIN_EXAMPLE
-% rpnscm -e "4 3 % 7 7 * * 2 / 10 -"
+% ./rpn.scm -e "4 3 % 7 7 * * 2 / 10 -"
 Input: (4 3 % 7 7 * * 2 / 10 -)
  0: (4 3 % 7 7 * * 2 / 10 -) ⇒ ()
  1: (3 % 7 7 * * 2 / 10 -) ⇒ (4)

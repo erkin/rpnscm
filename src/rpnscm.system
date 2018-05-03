@@ -1,5 +1,0 @@
-(use system)
-(define-system rpn
-  (scheme-file "op")
-  (scheme-file "parse" depends: '("op"))
-  (scheme-file "main" depends: '("parse")))
