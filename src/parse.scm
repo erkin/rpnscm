@@ -49,6 +49,7 @@
     (set! verbose (not quiet))
     (let ((exp (string-tokenize arg)))
       (set! padding (+ 1 (quotient (length exp) 10)))
-      (print "Input: " exp)
+      (if verbose
+       (print "Input: " exp))
       (print "Output: " (calc-step (exp-check exp '()) '() 0))
       (exit))))

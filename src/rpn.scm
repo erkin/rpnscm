@@ -21,6 +21,10 @@
   (print "Not yet implemented.")
   (exit))
 
+(define (rpn-file)
+  (print "Not yet implemented.")
+  (exit))
+
 (define (rpn-operators)
   (print "TODO: Add some docstrings or something")
   (for-each
@@ -40,7 +44,10 @@
                      (rpn-calculate arg quiet))
    (args:make-option (i interactive) #:none "Start interactive mode"
                      (rpn-interactive))
+   (args:make-option (f file) (required: "FILE") "Load expression from FILE"
+                     (rpn-file))
    (args:make-option (q quiet) #:none "Quiet mode"
                      (set! quiet #t))))
+
 (define (main options)
   (args:parse options opts))
