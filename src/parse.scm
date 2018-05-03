@@ -4,6 +4,7 @@
   (import rpn-op)
   
   (define padding 0)
+  (define verbose #t)
   
   (define (err-with-value message value code)
     (print "Error: " message value)
@@ -33,14 +34,15 @@
   
   (define (calc-step exp stack step)
     (if (null? exp)
-        stack
+        stack)
+    (if verbose
         (begin
           (display (string-pad (number->string step) padding))
-          (print ": " (cdr exp) " ⇒ " (car exp) " ⇒ " stack)
-          (let ((token (car exp)))
-           (calc-step (cdr exp) (rpn-eval token stack) (+ 1 step))))))
+          (print ": " (cdr exp) " ⇒ " (car exp) " ⇒ " stack)))
+    (calc-step (cdr exp) (rpn-eval (car exp) stack) (+ 1 step)))
 
-  (define (rpn-calculate arg)
+  (define (rpn-calculate arg quiet)
+    (set! verbose (not quiet))
     (let ((exp (string-tokenize arg)))
       (set! padding (+ 1 (quotient (length exp) 10)))
       (print "Input: " exp)

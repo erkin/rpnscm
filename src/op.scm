@@ -1,44 +1,70 @@
-(module rpn-op (rpn-eval operators)
+(module rpn-op *;(rpn-eval operators) 
   (import chicken scheme)
 
-  (define monadic '((~ . neg) (a . abs)))
-  (define dyadic '((+ . +) (- . -) (* . *) (/ . quotient)
-                   (^ . expt) (% . remainder)))
-  (define polyadic '((m . min) (M . max)))
+  (define monadic '((~ . rpn-neg) (a . rpn-abs) (d . rpn-dup) (p . rpn-pop)))
+  (define dyadic '((+ . rpn-add) (- . rpn-sub) (* . rpn-mul) (/ . rpn-div)
+                   (^ . rpn-exp) (% . rpn-mod)))
+  (define polyadic '((m . rpn-min) (M . rpn-max) (Σ . rpn-sum) (Π . rpn-pro)))
   (define operators (append monadic dyadic polyadic))
 
-  (define (err message code)
-    (print "Error: " message)
-    (exit code))
+  ;;; Monadic
+  (define (rpn-neg stack)
+    `(,(- (car stack)) ,@(cdr stack)))
 
-  (define (neg token)
-    (- token))
+  (define (rpn-abs stack)
+    `(,(abs (car stack)) ,@(cdr stack)))
 
-  (define (monad-op token stack)
-    (cons
-     ((eval (cdr (assoc token monadic))) (car stack))
-     (cdr stack)))
+  (define (rpn-dup stack)
+    `(,(car stack) `(car stack) ,@(cdr stack)))
+  
+  (define (rpn-pop stack)
+    (cdr stack))
 
-  (define (dyad-op token stack)
-    (cons
-     ((eval (cdr (assoc token dyadic))) (car stack) (cadr stack))
-     (cddr stack)))
+  ;;; Dyadic
+  (define (rpn-add stack)
+    `(,(+ (car stack) (cadr stack)) ,@(cddr stack)))
 
-  (define (polyad-op token stack)
-    (list
-     (apply (eval (cdr (assoc token polyadic))) stack)))
+  (define (rpn-sub stack)
+    `(,(- (car stack) (cadr stack)) ,@(cddr stack)))
+
+  (define (rpn-mul stack)
+    `(,(* (car stack) (cadr stack)) ,@(cddr stack)))
+
+  (define (rpn-div stack)
+    `(,(quotient (car stack) (cadr stack)) ,@(cddr stack)))
+
+  (define (rpn-exp stack)
+    `(,(expt (car stack) (cadr stack)) ,@(cddr stack)))
+
+  (define (rpn-mod stack)
+    `(,(remainder (car stack) (cadr stack)) ,@(cddr stack)))
+
+  ;; Polyadic
+  (define (rpm-min stack)
+    (list (min stack)))
+  
+  (define (rpn-max stack)
+    (list (max stack)))
+  
+  (define (rpn-sum stack)
+    (list (apply + stack)))
+  
+  (define (rpn-pro stack)
+    (list (apply * stack)))
+
 
   (define (rpn-eval token stack)
     (cond
-     ((integer? token)
-      `(,@stack ,token))
+     ((integer? token)    ; Push new number
+      `(,@stack ,token))  ; It's an operator if it's not a number
      ((null? stack)
-      (err "Stack empty." 1))
-     ((assoc token monadic)
-      (monad-op token stack))
-     ((assoc token polyadic)
-      (polyad-op token stack))
-     ((null? (cdr stack))
-      (err "Stack too short." 1))
-     ((assoc token dyadic)
-      (dyad-op token stack)))))
+      (print "Stack empty.")  ; Return stack if it's empty
+      stack)
+     ((assoc token dyadic)    ; Make sure the stack has 2+ elements
+      (if (pair? (cdr stack)) ; For dyadic operations only
+          ((eval (cdr (assoc token dyadic))) stack)
+          (begin
+            (print "Stack too short.")
+            stack)))          ; Return stack otherwise
+     (else  ; Other operations require at least 1 element
+      ((eval (cdr (assoc token operators))) stack)))))

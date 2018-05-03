@@ -3,5 +3,3 @@
   (scheme-file "op")
   (scheme-file "parse" depends: '("op"))
   (scheme-file "main" depends: '("parse")))
-
-(load-system rpn quiet: #t)

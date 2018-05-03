@@ -1,5 +1,10 @@
-(use args)
+#!/usr/bin/env csi -nq -ss --
+(use args system)
+(load "rpnscm.system")
+(load-system rpn quiet: #t)
 (import rpn-parse)
+
+(define quiet #f)
 
 (define (rpn-version)
   (print "rpnscm v0.8")
@@ -31,8 +36,11 @@
    (args:make-option (o operators) #:none "Print operators"
                      (rpn-operators))
    (args:make-option (e eval) (required: "\"EXPRESSION\"") "Evaluate EXPRESSION"
-                     (rpn-calculate arg))
+                     (rpn-calculate arg quiet))
    (args:make-option (i interactive) #:none "Start interactive mode"
-                     (rpn-interactive))))
-
-(args:parse (command-line-arguments) opts)
+                     (rpn-interactive))
+   (args:make-option (q quiet) #:none "Quiet mode"
+                     (set! quiet #t))))
+(define (main)
+  (print (command-line-arguments))
+  (args:parse (command-line-arguments) opts))
