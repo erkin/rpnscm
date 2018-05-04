@@ -12,9 +12,9 @@
 
   (define (int-check value)
     (let ((num (string->number value)))
-      (if (and (integer? num) (not (inexact? num)))
+      (if (not (inexact? num))
           num
-          (err-with-value "Not an exact integer: " value 2))))
+          (inexact->exact (round num)))))
 
   (define (sym-check value)
     (if (assoc (string->symbol value) operators)
