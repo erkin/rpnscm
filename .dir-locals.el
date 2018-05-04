@@ -1,5 +1,5 @@
 ((nil .
       ((buffer-file-coding-system . utf-8-unix)))
- ("src" .
+ ("src/*" .
   ((nil . ((mode . scheme)
            (geiser-scheme-implementation . chicken))))))
