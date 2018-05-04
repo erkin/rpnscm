@@ -1,4 +1,4 @@
-(module rpn-parse (rpn-calculate)
+(module rpn-parse (rpn:calculate)
   (import chicken scheme)
   (require-extension (only srfi-13 string-pad string-tokenize))
   (import rpn-op)
@@ -17,7 +17,7 @@
           (inexact->exact (round num)))))
 
   (define (sym-check value)
-    (if (assoc (string->symbol value) operators)
+    (if (assoc (string->symbol value) rpn:operators)
         (string->symbol value)
         (err-with-value "Unrecognised token: " value 2)))
 
@@ -36,7 +36,7 @@
     (display (string-pad (number->string step) padding))
     (print ": " (cdr exp) " -> " (car exp) " -> " stack))
 
-  (define (calc-interactive exp)
+  (define (calc-interactive stack)
     (print exp))
   
   (define (calc-step exp stack step)
@@ -48,9 +48,9 @@
      (else
       (if verbose
           (verbose-print exp stack step))
-      (calc-step (cdr exp) (rpn-eval (car exp) stack) (+ 1 step)))))
+      (calc-step (cdr exp) (rpn:eval (car exp) stack) (+ 1 step)))))
 
-  (define (rpn-calculate arg v)
+  (define (rpn:calculate arg v)
     (set! verbose v)
     (let ((exp (string-tokenize arg)))
       (set! padding (+ 1 (quotient (length exp) 10)))
@@ -58,3 +58,4 @@
           (print "Input: " exp))
       (print (calc-step (exp-check exp '()) '() 0))
       (exit))))
+
