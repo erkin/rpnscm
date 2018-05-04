@@ -50,13 +50,13 @@
     (list (apply * stack)))
 
   (define rpn:monadic  `((~ . ,rpn:neg) (a . ,rpn:abs)
-                     (d . ,rpn:dup) (p . ,rpn:pop)
-                     (s . ,rpn:sig)               ))
+                         (d . ,rpn:dup) (p . ,rpn:pop)
+                         (s . ,rpn:sig)               ))
   (define rpn:dyadic   `((+ . ,rpn:add) (- . ,rpn:sub)
-                     (* . ,rpn:mul) (/ . ,rpn:div)
-                     (^ . ,rpn:exp) (% . ,rpn:mod)))
+                         (* . ,rpn:mul) (/ . ,rpn:div)
+                         (^ . ,rpn:exp) (% . ,rpn:mod)))
   (define rpn:polyadic `((m . ,rpn:min) (M . ,rpn:max)
-                     (Σ . ,rpn:sum) (Π . ,rpn:pro)))
+                         (Σ . ,rpn:sum) (Π . ,rpn:pro)))
 
   (define rpn:operators (append rpn:monadic rpn:dyadic rpn:polyadic))
 

@@ -5,7 +5,7 @@
 (load-system rpn quiet: #t)
 (import rpn-parse rpn-op)
 
-(define verbose #f)
+(define *verbose* (make-parameter #f))
 
 (define rpn:operator-docstring
   '((~ . "(i->i) Negation")
@@ -66,13 +66,13 @@
      (args:make-option (o operators) #:none "Print list of operators"
                        (rpn:operator-usage))
      (args:make-option (e eval) (required: "\"EXPRESSION\"") "Evaluate EXPRESSION"
-                       (rpn:calculate arg verbose))
+                       (rpn:calculate arg (*verbose*)))
      (args:make-option (i interactive) #:none "Start interactive mode"
 		       (exit))
      (args:make-option (f file) (required: "FILE") "Load expression from FILE"
 		       (exit))
      (args:make-option (v verbose) #:none "Explain each step"
-                       (set! verbose #t))))
+                       (*verbose* #t))))
 
   (define (main options)
     (args:parse options opts)
