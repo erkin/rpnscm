@@ -1,16 +1,6 @@
-(module rpn-op *
+(module rpn-op (rpn-eval operators)
   (import chicken scheme)
 
-  (define monadic '((~ . rpn-neg) (a . rpn-abs)
-                    (d . rpn-dup) (p . rpn-pop)
-                    (s . rpn-sig)))
-  (define dyadic '((+ . rpn-add) (- . rpn-sub)
-                   (* . rpn-mul) (/ . rpn-div)
-                   (^ . rpn-exp) (% . rpn-mod)))
-  (define polyadic '((m . rpn-min) (M . rpn-max)
-                     (Σ . rpn-sum) (Π . rpn-pro)))
-  (define operators (append monadic dyadic polyadic))
-  
   ;;; Monadic
   (define (rpn-neg stack)
     `(,(- (car stack)) ,@(cdr stack)))
@@ -47,7 +37,7 @@
     `(,(remainder (car stack) (cadr stack)) ,@(cddr stack)))
 
   ;; Polyadic
-  (define (rpm-min stack)
+  (define (rpn-min stack)
     (list (min stack)))
   
   (define (rpn-max stack)
@@ -59,6 +49,16 @@
   (define (rpn-pro stack)
     (list (apply * stack)))
 
+  (define monadic  `((~ . ,rpn-neg) (a . ,rpn-abs)
+                     (d . ,rpn-dup) (p . ,rpn-pop)
+                     (s . ,rpn-sig)               ))
+  (define dyadic   `((+ . ,rpn-add) (- . ,rpn-sub)
+                     (* . ,rpn-mul) (/ . ,rpn-div)
+                     (^ . ,rpn-exp) (% . ,rpn-mod)))
+  (define polyadic `((m . ,rpn-min) (M . ,rpn-max)
+                     (Σ . ,rpn-sum) (Π . ,rpn-pro)))
+
+  (define operators (append monadic dyadic polyadic))
 
   (define (rpn-eval token stack)
     (cond
@@ -69,7 +69,7 @@
       stack)
      ((assoc token dyadic)    ; Make sure the stack has 2+ elements
       (if (pair? (cdr stack)) ; For dyadic operations only
-          ((eval (cdr (assoc token dyadic))) stack)
+          ((cdr (assoc token dyadic)) stack)
           (begin
             (print "Stack too short.")
             stack)))          ; Return stack otherwise

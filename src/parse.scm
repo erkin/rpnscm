@@ -36,6 +36,9 @@
     (display (string-pad (number->string step) padding))
     (print ": " (cdr exp) " -> " (car exp) " -> " stack))
 
+  (define (calc-interactive exp)
+    (print exp))
+  
   (define (calc-step exp stack step)
     (cond
      ((null? exp)
