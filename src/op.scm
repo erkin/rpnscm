@@ -1,12 +1,16 @@
-(module rpn-op (rpn-eval operators) 
+(module rpn-op *
   (import chicken scheme)
 
-  (define monadic '((~ . rpn-neg) (a . rpn-abs) (d . rpn-dup) (p . rpn-pop)))
-  (define dyadic '((+ . rpn-add) (- . rpn-sub) (* . rpn-mul) (/ . rpn-div)
+  (define monadic '((~ . rpn-neg) (a . rpn-abs)
+                    (d . rpn-dup) (p . rpn-pop)
+                    (s . rpn-sig)))
+  (define dyadic '((+ . rpn-add) (- . rpn-sub)
+                   (* . rpn-mul) (/ . rpn-div)
                    (^ . rpn-exp) (% . rpn-mod)))
-  (define polyadic '((m . rpn-min) (M . rpn-max) (Σ . rpn-sum) (Π . rpn-pro)))
+  (define polyadic '((m . rpn-min) (M . rpn-max)
+                     (Σ . rpn-sum) (Π . rpn-pro)))
   (define operators (append monadic dyadic polyadic))
-
+  
   ;;; Monadic
   (define (rpn-neg stack)
     `(,(- (car stack)) ,@(cdr stack)))
@@ -20,6 +24,9 @@
   (define (rpn-pop stack)
     (cdr stack))
 
+  (define (rpn-sig stack)
+    `(,(signum (car stack)) ,@(cdr stack)))
+  
   ;;; Dyadic
   (define (rpn-add stack)
     `(,(+ (car stack) (cadr stack)) ,@(cddr stack)))
