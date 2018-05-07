@@ -74,4 +74,4 @@
             (print "Stack too short.")
             stack)))          ; Return stack otherwise
      (else  ; Other operations require at least 1 element
-      ((eval (cdr (assoc token rpn:operators))) stack)))))
+      ((cdr (assoc token rpn:operators)) stack)))))
