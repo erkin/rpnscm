@@ -31,3 +31,7 @@ Input: (4 3 % 7 7 * * 2 / 10 -)
 10: () -> - -> (24 10)
 Output: (14)
 #+END_EXAMPLE
+
+** Note
+Only integers are supported for the time being.
+Inexact numbers get rounded to the nearest exact integer.

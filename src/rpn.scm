@@ -5,9 +5,9 @@
 (load-system rpn quiet: #t)
 (import rpn-parse rpn-op)
 
-(define verbose #f)
+(define *verbose* (make-parameter #f))
 
-(define op-docstring
+(define rpn:operator-docstring
   '((~ . "(i->i) Negation")
     (a . "(i->i) Absolute value")
     (s . "(i->i) Signum")
@@ -24,26 +24,22 @@
     (m . "(n->i) Discard all but minimum")
     (M . "(n->i) Discard all but maximum")))
 
-(define (rpn-version)
+(define (rpn:version)
   (print "rpnscm v0.8")
   (print "All wrongs reversed.")
   (exit))
 
-(define (rpn-usage)
+(define (rpn:usage)
   (print "Usage: " (car (argv)) " -e \"EXPRESSION\"")
   (print (args:usage opts))
   (print "See -o for a list of operators.")
   (exit))
 
-(define (rpn-interactive)
+(define (rpn:file)
   (print "Not yet implemented.")
   (exit))
 
-(define (rpn-file)
-  (print "Not yet implemented.")
-  (exit))
-
-(define (rpn-operators)
+(define (rpn:operator-usage)
   (print "Notation:")
   (print "(i->): Pop")
   (print "(ii->): Pop two")
@@ -57,26 +53,27 @@
    (lambda (op)
      (display (car op))
      (display ": ")
-     (print (cdr (assoc (car op) op-docstring))))
-   operators)
+     (print (cdr (assoc (car op) rpn:operator-docstring))))
+   rpn:operators)
   (exit))
 
   (define opts
     (list
      (args:make-option (h help) #:none "Print this help message"
-                       (rpn-usage))
+                       (rpn:usage))
      (args:make-option (V version) #:none "Display version"
-                       (rpn-version))
+                       (rpn:version))
      (args:make-option (o operators) #:none "Print list of operators"
-                       (rpn-operators))
+                       (rpn:operator-usage))
      (args:make-option (e eval) (required: "\"EXPRESSION\"") "Evaluate EXPRESSION"
-                       (rpn-calculate arg verbose))
+                       (rpn:calculate arg (*verbose*)))
      (args:make-option (i interactive) #:none "Start interactive mode"
-                       (rpn-interactive))
+		       (exit))
      (args:make-option (f file) (required: "FILE") "Load expression from FILE"
-                       (rpn-file))
+		       (exit))
      (args:make-option (v verbose) #:none "Explain each step"
-                       (set! verbose #t))))
+                       (*verbose* #t))))
 
   (define (main options)
-    (args:parse options opts))
+    (args:parse options opts)
+    (if (null? options)	(rpn:usage)))
