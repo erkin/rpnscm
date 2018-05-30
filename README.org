@@ -1,9 +1,5 @@
-* RPNSCM v0.7
+* RPNSCM v0.8
 A primitive RPN calculator written in CHICKEN Scheme.
-
-** Note
-    This is the development branch for the alist-based version.
-    It only supports exact integers and basic operations until I implement precision.
 
 ** Eggs
    * =srfi-13= (for =string-pad= & =string-tokenize=)
@@ -13,22 +9,29 @@ A primitive RPN calculator written in CHICKEN Scheme.
 #+BEGIN_EXAMPLE
 ./rpn.scm -e "EXPRESSION"
 #+END_EXAMPLE
-    
+See =--help= for options and =--operators=
+for a list of operations (and what they do).
+
 *** Example
 #+BEGIN_EXAMPLE
-% ./rpn.scm -e "4 3 % 7 7 * * 2 / 10 -"
+% ./rpn.scm -e "4 3 % 7 7 * * 2 / 10 -" 
+(14)
+% ./rpn.scm -v -e "4 3 % 7 7 * * 2 / 10 -" 
 Input: (4 3 % 7 7 * * 2 / 10 -)
- 0: (4 3 % 7 7 * * 2 / 10 -) ⇒ ()
- 1: (3 % 7 7 * * 2 / 10 -) ⇒ (4)
- 2: (% 7 7 * * 2 / 10 -) ⇒ (4 3)
- 3: (7 7 * * 2 / 10 -) ⇒ (1)
- 4: (7 * * 2 / 10 -) ⇒ (1 7)
- 5: (* * 2 / 10 -) ⇒ (1 7 7)
- 6: (* 2 / 10 -) ⇒ (7 7)
- 7: (2 / 10 -) ⇒ (49)
- 8: (/ 10 -) ⇒ (49 2)
- 9: (10 -) ⇒ (24)
-10: (-) ⇒ (24 10)
-11: () ⇒ (14)
+ 0: (3 % 7 7 * * 2 / 10 -) -> 4 -> ()
+ 1: (% 7 7 * * 2 / 10 -) -> 3 -> (4)
+ 2: (7 7 * * 2 / 10 -) -> % -> (4 3)
+ 3: (7 * * 2 / 10 -) -> 7 -> (1)
+ 4: (* * 2 / 10 -) -> 7 -> (1 7)
+ 5: (* 2 / 10 -) -> * -> (1 7 7)
+ 6: (2 / 10 -) -> * -> (7 7)
+ 7: (/ 10 -) -> 2 -> (49)
+ 8: (10 -) -> / -> (49 2)
+ 9: (-) -> 10 -> (24)
+10: () -> - -> (24 10)
 Output: (14)
 #+END_EXAMPLE
+
+** Note
+Only integers are supported for the time being.
+Inexact numbers get rounded to the nearest exact integer.

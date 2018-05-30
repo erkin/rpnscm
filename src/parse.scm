@@ -1,10 +1,10 @@
-(module rpn-parse (rpn-calculate operators)
+(module rpn-parse (rpn:calculate)
   (import chicken scheme)
   (require-extension (only srfi-13 string-pad string-tokenize))
   (import rpn-op)
 
-  (define padding 0)
-  (define verbose #t)
+  (define *padding* (make-parameter 0))
+  (define *verbose* (make-parameter #f))
 
   (define (err-with-value message value code)
     (print "Error: " message value)
@@ -12,12 +12,12 @@
 
   (define (int-check value)
     (let ((num (string->number value)))
-      (if (and (integer? num) (not (inexact? num)))
+      (if (not (inexact? num))
           num
-          (err-with-value "Not an exact integer: " value 2))))
+          (inexact->exact (round num)))))
 
   (define (sym-check value)
-    (if (assoc (string->symbol value) operators)
+    (if (assoc (string->symbol value) rpn:operators)
         (string->symbol value)
         (err-with-value "Unrecognised token: " value 2)))
 
@@ -33,23 +33,29 @@
         new-exp))
 
   (define (verbose-print exp stack step)
-    (display (string-pad (number->string step) padding))
+    (display (string-pad (number->string step) *padding*))
     (print ": " (cdr exp) " -> " (car exp) " -> " stack))
 
+  (define (calc-interactive stack)
+    (print exp))
+  
   (define (calc-step exp stack step)
     (cond
      ((null? exp)
+      (if (*verbose*)
+          (display "Output: "))
       stack)
      (else
-      (if verbose
+      (if (*verbose*)
           (verbose-print exp stack step))
-      (calc-step (cdr exp) (rpn-eval (car exp) stack) (+ 1 step)))))
+      (calc-step (cdr exp) (rpn:eval (car exp) stack) (+ 1 step)))))
 
-  (define (rpn-calculate arg quiet)
-    (set! verbose (not quiet))
+  (define (rpn:calculate arg v)
+    (*verbose* v)
     (let ((exp (string-tokenize arg)))
-      (set! padding (+ 1 (quotient (length exp) 10)))
-      (if verbose
-       (print "Input: " exp))
-      (print "Output: " (calc-step (exp-check exp '()) '() 0))
+      (set! *padding* (+ 1 (quotient (length exp) 10)))
+      (if (*verbose*)
+          (print "Input: " exp))
+      (print (calc-step (exp-check exp '()) '() 0))
       (exit))))
+
