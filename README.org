@@ -1,5 +1,6 @@
 * RPNSCM v0.8
 A primitive RPN calculator written in CHICKEN Scheme.
+See the development branch for new stuff.
 
 ** Eggs
    * =srfi-13= (for =string-pad= & =string-tokenize=)
