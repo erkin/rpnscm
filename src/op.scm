@@ -115,7 +115,7 @@
   ;; alists of procedures defined above
   (define rpn:monadic  `((n . ,rpn:neg) (@ . ,rpn:abs)
                          (: . ,rpn:dup) (! . ,rpn:pop)
-                         (s . ,rpn:sig) (? . ,rpn:pek))
+                         (s . ,rpn:sig) (? . ,rpn:pek)))
   (define rpn:dyadic   `((+ . ,rpn:add) (- . ,rpn:sub)
                          (* . ,rpn:mul) (/ . ,rpn:div)
                          (^ . ,rpn:exp) (% . ,rpn:mod)

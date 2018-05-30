@@ -57,23 +57,24 @@
    rpn:operators)
   (exit))
 
-  (define opts
-    (list
-     (args:make-option (h help) #:none "Print this help message"
-                       (rpn:usage))
-     (args:make-option (V version) #:none "Display version"
-                       (rpn:version))
-     (args:make-option (o operators) #:none "Print list of operators"
-                       (rpn:operator-usage))
-     (args:make-option (e eval) (required: "\"EXPRESSION\"") "Evaluate EXPRESSION"
-                       (rpn:calculate arg (*verbose*)))
-     (args:make-option (i interactive) #:none "Start interactive mode"
-		       (exit))
-     (args:make-option (f file) (required: "FILE") "Load expression from FILE"
-		       (exit))
-     (args:make-option (v verbose) #:none "Explain each step"
-                       (*verbose* #t))))
+(define opts
+  (list
+   (args:make-option (h help) #:none "Print this help message"
+                     (rpn:usage))
+   (args:make-option (V version) #:none "Display version"
+                     (rpn:version))
+   (args:make-option (o operators) #:none "Print list of operators"
+                     (rpn:operator-usage))
+   (args:make-option (e eval) (required: "\"EXPRESSION\"") "Evaluate EXPRESSION"
+                     (rpn:calculate arg (*verbose*)))
+   (args:make-option (i interactive) #:none "Start interactive mode"
+		     (exit))
+   (args:make-option (f file) (required: "FILE") "Load expression from FILE"
+		     (exit))
+   (args:make-option (v verbose) #:none "Explain each step"
+                     (*verbose* #t))))
 
-  (define (main options)
-    (args:parse options opts)
-    (if (null? options)	(rpn:usage)))
+(define (main options)
+  (args:parse options opts)
+  (if (null? options)	(rpn:usage)))
+
