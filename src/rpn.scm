@@ -25,7 +25,7 @@
     (M . "(n->i) Discard all but maximum")))
 
 (define (rpn:version)
-  (print "rpnscm v0.8")
+  (print "rpnscm v0.9")
   (print "All wrongs reversed.")
   (exit))
 
