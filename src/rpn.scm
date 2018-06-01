@@ -8,19 +8,21 @@
 (define *verbose* (make-parameter #f))
 
 (define rpn:operator-docstring
-  '((~ . "(i->i) Negation")
-    (a . "(i->i) Absolute value")
+  '((! . "(i->nil) Pop and discard")
+    (n . "(i->i) Negation")
+    (@ . "(i->i) Absolute value")
     (s . "(i->i) Signum")
-    (d . "(i->ii) Duplication")
-    (p . "(i->nil) Pop and discard")
+    (? . "(i->i) Pop and push back")
+    (: . "(i->ii) Duplication")
     (+ . "(ii->i) Addition")
     (- . "(ii->i) Subtraction")
     (* . "(ii->i) Multiplication")
     (^ . "(ii->i) Exponentiation")
     (/ . "(ii->i) Integer division (quotient)")
     (% . "(ii->i) Integer modulo (remainder)")
-    (Σ . "(n->i) Sum of entire stack")
-    (Π . "(n->i) Product of entire stack")
+    (~ . "(ii->ii) Swap")
+    (S . "(n->i) Sum of entire stack")
+    (P . "(n->i) Product of entire stack")
     (m . "(n->i) Discard all but minimum")
     (M . "(n->i) Discard all but maximum")))
 
@@ -36,6 +38,10 @@
   (exit))
 
 (define (rpn:file)
+  (print "Not yet implemented.")
+  (exit))
+
+(define (rpn:interactive)
   (print "Not yet implemented.")
   (exit))
 
@@ -68,13 +74,12 @@
    (args:make-option (e eval) (required: "\"EXPRESSION\"") "Evaluate EXPRESSION"
                      (rpn:calculate arg (*verbose*)))
    (args:make-option (i interactive) #:none "Start interactive mode"
-		     (exit))
+		     (rpn:interactive))
    (args:make-option (f file) (required: "FILE") "Load expression from FILE"
 		     (exit))
    (args:make-option (v verbose) #:none "Explain each step"
                      (*verbose* #t))))
 
-(define (main options)
-  (args:parse options opts)
-  (if (null? options)	(rpn:usage)))
-
+(define (main args)
+  (args:parse args opts)
+  (if (null? args) (rpn:usage)))
