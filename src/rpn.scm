@@ -81,5 +81,4 @@
                      (*verbose* #t))))
 
 (define (main args)
-  (args:parse args opts)
-  (if (null? args) (rpn:usage)))
+  (if (null? args) (rpn:usage) (args:parse args opts)))

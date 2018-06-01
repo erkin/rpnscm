@@ -18,7 +18,7 @@
   ;; 5 :
   ;; (5 5)
   (define (rpn:dup stack)
-    `(,(car stack) `(car stack) ,@(cdr stack)))
+    `(,(car stack) ,(car stack) ,@(cdr stack)))
   
   ;; pop
   ;; 3 5 !
@@ -54,50 +54,50 @@
   ;; 5 3 - 3 5 - -3 5 -
   ;; (2 -2 -8)
   (define (rpn:sub stack)
-    `(,(- (car stack) (cadr stack)) ,@(cddr stack)))
+    `(,(- (cadr stack) (car stack)) ,@(cddr stack)))
 
   ;; multiplication
   ;; 3 -5 *
   ;; (-15)
   (define (rpn:mul stack)
-    `(,(* (car stack) (cadr stack)) ,@(cddr stack)))
+    `(,(* (cadr stack) (car stack)) ,@(cddr stack)))
 
   ;; [integer] division
   ;; -20 5 / 5 3 /
   ;; (-4 1)
   (define (rpn:div stack)
-    `(,(quotient (car stack) (cadr stack)) ,@(cddr stack)))
+    `(,(quotient (cadr stack) (car stack)) ,@(cddr stack)))
 
   ;; exponentiation
   ;; 3 5 ^ 5 3 ^
   ;; (243 125)
   (define (rpn:exp stack)
-    `(,(expt (car stack) (cadr stack)) ,@(cddr stack)))
+    `(,(expt (cadr stack) (car stack)) ,@(cddr stack)))
 
   ;; [integer] modulo
   ;; 3 5 % 5 3 %
   ;; (3 2)
   (define (rpn:mod stack)
-    `(,(remainder (car stack) (cadr stack)) ,@(cddr stack)))
+    `(,(remainder (cadr stack) (car stack)) ,@(cddr stack)))
 
   ;; swap
   ;; 3 5 ~
   ;; (5 3)
   (define (rpn:swp stack)
-    `(,(cadr stack) (car stack) ,@(cddr stack)))
+    `(,(cadr stack) ,(car stack) ,@(cddr stack)))
 
   ;;; Polyadic
   ;; minimum
   ;; 7 -3 5 m
   ;; (-3)
   (define (rpn:min stack)
-    (list (min stack)))
+    (list (apply min stack)))
   
   ;; maximum
   ;; 7 -3 5 M
   ;; (7)
   (define (rpn:max stack)
-    (list (max stack)))
+    (list (apply max stack)))
   
   ;; summation
   ;; 7 -3 5 S
@@ -128,7 +128,7 @@
   (define (rpn:eval token stack)
     (cond
      ((integer? token)    ; Push new number
-      `(,@stack ,token))  ; It's an operator if it's not a number
+      `(,token ,@stack))  ; It's an operator if it's not a number
      ((null? stack)
       (print "Stack empty.")  ; Return stack if it's empty
       stack)
