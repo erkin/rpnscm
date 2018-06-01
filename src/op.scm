@@ -41,8 +41,8 @@
   ;; (1 -1)
   (define (rpn:sig stack)
     `(,(signum (car stack)) ,@(cdr stack)))
-  
 
+  
   ;;; Dyadic
   ;; addition
   ;; 3 5 + -3 5 +
@@ -86,6 +86,7 @@
   (define (rpn:swp stack)
     `(,(cadr stack) ,(car stack) ,@(cddr stack)))
 
+  
   ;;; Polyadic
   ;; minimum
   ;; 7 -3 5 m
@@ -111,6 +112,11 @@
   (define (rpn:pro stack)
     (list (apply * stack)))
 
+  ;; empty
+  ;; 7 -3 5 $
+  ;; ()
+  (define (rpn:emp stack)
+    (list))
 
   ;; alists of procedures defined above
   (define rpn:monadic  `((n . ,rpn:neg) (@ . ,rpn:abs)
@@ -121,12 +127,13 @@
                          (^ . ,rpn:exp) (% . ,rpn:mod)
                          (~ . ,rpn:swp)               ))
   (define rpn:polyadic `((m . ,rpn:min) (M . ,rpn:max)
-                         (S . ,rpn:sum) (P . ,rpn:pro)))
+                         (S . ,rpn:sum) (P . ,rpn:pro)
+                         ($ . ,rpn:emp)))
 
   (define rpn:operators (append rpn:monadic rpn:dyadic rpn:polyadic))
 
   (define (rpn:eval token stack)
-    (cond
+    (cond ; Each integer is a niladic push operator
      ((integer? token)    ; Push new number
       `(,token ,@stack))  ; It's an operator if it's not a number
      ((null? stack)
