@@ -30,7 +30,7 @@
     ($ . "( n -> nil) Empty")))
 
 (define (rpn:version)
-  (print "rpnscm v0.9")
+  (print "rpnscm v0.10")
   (print "All wrongs reversed.")
   (exit))
 
@@ -38,10 +38,6 @@
   (print "Usage: " (car (argv)) " -e \"EXPRESSION\"")
   (print (args:usage opts))
   (print "See -o for a list of operators.")
-  (exit))
-
-(define (rpn:file)
-  (print "Not yet implemented.")
   (exit))
 
 (define (rpn:interactive)
