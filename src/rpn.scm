@@ -81,7 +81,9 @@
    (args:make-option (i interactive) #:none "Start interactive mode"
 		     (rpn:interactive))
    (args:make-option (f file) (required: "FILE") "Load expression from FILE"
-		     (rpn:file))
+                     (rpn:calculate
+                      (with-input-from-file arg read-string)
+                      (*verbose*)))
    (args:make-option (v verbose) #:none "Explain each step"
                      (*verbose* #t))))
 
