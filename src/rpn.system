@@ -1,4 +1,5 @@
 (use system)
 (define-system rpn
+  (scheme-file "docstring")
   (scheme-file "op")
   (scheme-file "parse" depends: '("op")))

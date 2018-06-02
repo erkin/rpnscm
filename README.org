@@ -1,4 +1,4 @@
-* RPNSCM v0.10
+* RPNSCM v0.11
 A primitive RPN calculator written in CHICKEN Scheme. Development branch.
 
 ** Eggs
