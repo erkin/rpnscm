@@ -3,4 +3,4 @@
          (buffer-file-coding-system . utf-8-unix)))
  (scheme-mode . ((geiser-scheme-implementation . chicken)
                  (subdirs . t)))
- ("src". ((nil . ((mode . scheme))))))
+ ("src/rpn.system". ((nil . ((mode . scheme))))))

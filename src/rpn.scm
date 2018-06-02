@@ -1,9 +1,5 @@
-#!/usr/bin/csi -ss
-
-(use args system)
-(load "rpn.system")
-(load-system rpn quiet: #t)
-(import rpn.parse rpn.op rpn.docstring)
+(use args)
+(import rpn.parse rpn.docstring)
 
 (define *verbose* (make-parameter #f))
 
@@ -37,7 +33,6 @@
    (args:make-option (v verbose) #:none "Explain each step"
                      (*verbose* #t))))
 
-(define (main args)
-  (if (null? args)
-      (rpn:usage)
-      (args:parse args opts)))
+(if (null? (command-line-arguments))
+    (rpn:usage)
+    (args:parse (command-line-arguments) opts))

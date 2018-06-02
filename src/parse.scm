@@ -1,11 +1,12 @@
 (module rpn.parse (rpn:calculate rpn:repl)
   (import chicken scheme extras)
-  (require-extension (only srfi-13 string-pad string-tokenize))
+  (import (only srfi-13 string-pad string-tokenize))
   (import rpn.op)
 
   (define *padding* (make-parameter 0))
   (define *verbose* (make-parameter #f))
 
+  ;; TODO add exception handling instead of this
   (define (err-with-value message value code)
     (print "Error: " message value)
     (exit code))
