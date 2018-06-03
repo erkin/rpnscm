@@ -1,9 +1,0 @@
-(use system)
-(define-system rpn
-  (compiled-scheme-file "docstring")
-  (compiled-scheme-file "op")
-  (compiled-scheme-file "parse" depends: '("op"))
-  (compiled-scheme-file "rpn" depends: '("parse" "docstring")))
-
-(build-system rpn)
-(exit)

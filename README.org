@@ -7,16 +7,16 @@ A primitive RPN calculator written in CHICKEN Scheme. Development branch.
 
 ** Usage
 #+BEGIN_EXAMPLE
-./rpn.scm -e "EXPRESSION"
+rpn -e "EXPRESSION"
 #+END_EXAMPLE
 See =--help= for options and =--operators=
 for a list of operations (and what they do).
 
 *** Example
 #+BEGIN_EXAMPLE
-% ./rpn.scm -e "4 3 % 7 7 * * 2 / 10 -" 
+% ./rpn -e "4 3 % 7 7 * * 2 / 10 -" 
 (14)
-% ./rpn.scm -v -e "4 3 % 7 7 * * 2 / 10 -" 
+% ./rpn -v -e "4 3 % 7 7 * * 2 / 10 -" 
 Input: (4 3 % 7 7 * * 2 / 10 -)
  0: (3 % 7 7 * * 2 / 10 -) -> 4 -> ()
  1: (% 7 7 * * 2 / 10 -) -> 3 -> (4)
@@ -30,6 +30,13 @@ Input: (4 3 % 7 7 * * 2 / 10 -)
  9: (-) -> 10 -> (24)
 10: () -> - -> (24 10)
 Output: (14)
+% ./rpn -i
+5 5 +
+8 2 *
+!
+ 16
+^D
+(10)
 #+END_EXAMPLE
 
 ** Note

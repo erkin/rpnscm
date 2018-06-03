@@ -48,7 +48,7 @@
   (define (rpn:calculate expression #!optional (verbose #f))
     (*verbose* verbose)
     (let ((exp (exp-check (string-tokenize expression))))
-      (when (*verbose*)
+      (when (*verbose*) ; TODO make padding cleaner with alignment
         (*padding* (+ 1 (quotient (length exp) 10)))
         (print "Input: " exp))
       (print (calc-step exp)))
@@ -58,14 +58,14 @@
     (define (rpn:read stack)
       (let ((line (read-line)))
         (cond ((eof-object? line)
-               stack)
+               stack)    ; exit on EOF
               ((zero? (string-length line))
-               (rpn:read
+               (rpn:read ; nothing to read if the user just pressed return
                 stack))
               (else
                (rpn:read
                 (calc-step (exp-check (string-tokenize line) stack)))))))
     (*verbose* verbose)
-    (*padding* 2)
+    (*padding* 2) ; TODO fix verbose behaviour in REPL
     (print (rpn:read '()))
     (exit)))
