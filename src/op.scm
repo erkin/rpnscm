@@ -137,7 +137,7 @@
      ((integer? token)       ; Push new number
       `(,token ,@stack))     ; It's an operator if it's not a number
      ((null? stack)
-      (print "Stack empty.")            ; Return stack if it's empty
+      (print "Stack empty.") ; Return stack if it's empty
       stack)
      ((assoc token rpn:dyadic)   ; Make sure the stack has 2+ elements
       (if (pair? (cdr stack))    ; For dyadic operations only

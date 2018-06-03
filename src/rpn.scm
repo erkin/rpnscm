@@ -1,5 +1,5 @@
 (use args)
-(import rpn.parse rpn.docstring)
+(use rpn.parse rpn.docstring)
 
 (define *verbose* (make-parameter #f))
 
