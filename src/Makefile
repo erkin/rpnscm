@@ -1,23 +1,28 @@
-CSC = csc -O2
+CSC = csc -O2 -d2
+SOURCEDIR = src
+BULIDDIR = build
+DESTDIR = bin
 
 all: build
 
 build: rpn
 
 clean:
+	rm -f *.c
 	rm -f *.import.scm
+	rm -f *.o
 	rm -f *.so
 
 .PHONY: all build clean
 
 op:
-	$(CSC) -s -J op.scm
-
-docstring:
-	$(CSC) -s -J docstring.scm
+	$(CSC) -c -J op.scm -unit rpn-op
 
 parse: op
-	$(CSC) -s -J parse.scm
+	$(CSC) -c -J parse.scm -unit rpn-parse -uses rpn-op
 
-rpn: parse docstring
-	$(CSC) -o rpn rpn.scm
+doc:
+	$(CSC) -c -J doc.scm -unit rpn-doc
+
+rpn: parse doc
+	$(CSC) -o rpn rpn.scm op.o parse.o doc.o -uses rpn-doc -uses rpn-parse

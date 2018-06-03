@@ -1,4 +1,4 @@
-(module rpn.op (rpn:eval rpn:operators)
+(module rpn-op (rpn:eval rpn:operators)
   (import chicken scheme)
 
 ;;; Monadic operators

@@ -1,4 +1,4 @@
-(module rpn.docstring (rpn:operator-usage)
+(module rpn-doc (rpn:operator-usage)
   (import chicken scheme)
   (define rpn:maths-operators
     '((n . "( i ->   i) Negation")
