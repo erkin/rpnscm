@@ -4,7 +4,7 @@
 (define *verbose* (make-parameter #f))
 
 (define (rpn:version)
-  (print "rpnscm v0.11")
+  (print "rpnscm v0.12")
   (print "All wrongs reversed.")
   (exit))
 
