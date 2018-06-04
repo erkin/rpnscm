@@ -1,4 +1,1 @@
-src/*.import.scm
-src/*.o
-src/*.so
 src/rpn
