@@ -5,6 +5,7 @@
 
 (define (rpn:version)
   (print   "rpnscm v0.13")
+  (print   "Copyright (C) Erkin Batu Altunbaş")
   (display "This project's source code is subject to the terms of the ")
   (print   "Mozilla Public Licence v2.0")
   (display "If a copy of the MPL was not distributed with this file, ")
