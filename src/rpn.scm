@@ -1,4 +1,4 @@
-(use args)
+(use args extras)
 (import rpn-parse rpn-doc)
 
 (define *verbose* (make-parameter #f))

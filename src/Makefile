@@ -3,7 +3,7 @@ SOURCEDIR = src
 BULIDDIR = build
 DESTDIR = bin
 
-all: build
+all: build clean
 
 build: rpn
 
