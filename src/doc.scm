@@ -24,12 +24,13 @@
 
   (define rpn:notation
     '("(nil ->    ): New value"
-      "( i  ->    ): Pop"
+      "( i  ->    ): Pop one"
       "(ii  ->    ): Pop two"
       "( n  ->    ): Pop all"
-      "(    ->   i): Push"
+      "(    -> nil): Push nothing"
+      "(    ->   i): Push one"
       "(    ->  ii): Push two"
-      "(    -> nil): Push nothing"))
+      "(    ->   n): Map"))
 
   (define (rpn:operator-usage)
     (define (alist-print op)
