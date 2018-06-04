@@ -1,7 +1,7 @@
 (module rpn-op (rpn:eval rpn:operators)
   (import chicken scheme)
 
-  ;;; Monadic operators
+;;; Monadic operators
   ;; negate
   ;; 3 n -5 n
   ;; (-3 5)
@@ -25,7 +25,7 @@
   ;; "5"
   ;; (3)
   (define (rpn:pop stack)
-    (print (car stack))
+    (print " " (car stack))
     (cdr stack))
 
   ;; peek
@@ -33,7 +33,7 @@
   ;; "5"
   ;; (3 5)
   (define (rpn:pek stack)
-    (print (car stack))
+    (print " " (car stack))
     stack)
 
   ;; sign
@@ -43,7 +43,7 @@
     `(,(signum (car stack)) ,@(cdr stack)))
 
   
-  ;;; Dyadic
+;;; Dyadic
   ;; addition
   ;; 3 5 + -3 5 +
   ;; (8 2)
@@ -87,7 +87,7 @@
     `(,(cadr stack) ,(car stack) ,@(cddr stack)))
 
   
-  ;;; Polyadic
+;;; Polyadic
   ;; minimum
   ;; 7 -3 5 m
   ;; (-3)
@@ -133,17 +133,17 @@
   (define rpn:operators (append rpn:monadic rpn:dyadic rpn:polyadic))
 
   (define (rpn:eval token stack)
-    (cond ; Each integer is a niladic push operator
-     ((integer? token)    ; Push new number
-      `(,token ,@stack))  ; It's an operator if it's not a number
+    (cond                      ; Each integer is a niladic push operator
+     ((integer? token)         ; Push new number
+      `(,token ,@stack))       ; It's an operator if it's not a number
      ((null? stack)
-      (print "Stack empty.")  ; Return stack if it's empty
+      (print "Stack empty.")   ; Return stack if it's empty
       stack)
-     ((assoc token rpn:dyadic)    ; Make sure the stack has 2+ elements
-      (if (pair? (cdr stack)) ; For dyadic operations only
+     ((assoc token rpn:dyadic) ; Make sure the stack has 2+ elements
+      (if (pair? (cdr stack))  ; For dyadic operations only
           ((cdr (assoc token rpn:dyadic)) stack)
           (begin
             (print "Stack too short.")
-            stack)))          ; Return stack otherwise
-     (else  ; Other operations require at least 1 element
+            stack)))           ; Return stack otherwise
+     (else                     ; Other operations require at least 1 element
       ((cdr (assoc token rpn:operators)) stack)))))

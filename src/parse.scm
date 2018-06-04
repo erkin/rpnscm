@@ -1,11 +1,13 @@
-(module rpn-parse (rpn:calculate)
+(module rpn-parse (rpn:calculate rpn:repl)
   (import chicken scheme)
   (require-extension (only srfi-13 string-pad string-tokenize))
+  (use (only extras read-line))
   (import rpn-op)
 
   (define *padding* (make-parameter 0))
   (define *verbose* (make-parameter #f))
 
+  ;; TODO add exception handling instead of this
   (define (err-with-value message value code)
     (print "Error: " message value)
     (exit code))
@@ -21,7 +23,7 @@
         (string->symbol value)
         (err-with-value "Unrecognised token: " value 2)))
 
-  (define (exp-check exp new-exp)
+  (define (exp-check exp #!optional (new-exp '()))
     (if (pair? exp)
         (let ((value (car exp)))
           (exp-check
@@ -33,29 +35,38 @@
         new-exp))
 
   (define (verbose-print exp stack step)
-    (display (string-pad (number->string step) *padding*))
+    (display (string-pad (number->string step) (*padding*)))
     (print ": " (cdr exp) " -> " (car exp) " -> " stack))
 
-  (define (calc-interactive stack)
-    (print exp))
-  
-  (define (calc-step exp stack step)
+  (define (calc-step exp #!optional (stack '()) (step 0))
     (cond
-     ((null? exp)
-      (if (*verbose*)
-          (display "Output: "))
-      stack)
+     ((null? exp) stack)
      (else
       (if (*verbose*)
           (verbose-print exp stack step))
       (calc-step (cdr exp) (rpn:eval (car exp) stack) (+ 1 step)))))
-
-  (define (rpn:calculate arg v)
-    (*verbose* v)
-    (let ((exp (string-tokenize arg)))
-      (set! *padding* (+ 1 (quotient (length exp) 10)))
-      (if (*verbose*)
-          (print "Input: " exp))
-      (print (calc-step (exp-check exp '()) '() 0))
-      (exit))))
-
+  
+  (define (rpn:calculate expression #!optional (verbose #f))
+    (*verbose* verbose)
+    (let ((exp (exp-check (string-tokenize expression))))
+      (when (*verbose*)  ; TODO make padding cleaner with alignment
+        (*padding* (+ 1 (quotient (length exp) 10)))
+        (print "Input: " exp))
+      (print (calc-step exp)))
+    (exit))
+  
+  (define (rpn:repl #!optional (verbose #f))
+    (define (rpn:read stack)
+      (let ((line (read-line)))
+        (cond ((eof-object? line)
+               stack)    ; exit on EOF
+              ((zero? (string-length line))
+               (rpn:read ; nothing to read if the user just pressed return
+                stack))
+              (else
+               (rpn:read
+                (calc-step (exp-check (string-tokenize line) stack)))))))
+    (*verbose* verbose)
+    (*padding* 2)        ; TODO fix verbose behaviour in REPL
+    (print (rpn:read '()))
+    (exit)))
