@@ -1,8 +1,11 @@
 * RPNSCM v0.13
-A primitive RPN calculator written in CHICKEN Scheme. Development branch.
+A primitive (but future-rich in near future) RPN calculator written in Scheme.
+(Development branch.)
+
+This is effectively a top project for me to hack with CHICKEN Scheme.
 
 ** Eggs
-   * =srfi-13= (for =string-pad= & =string-tokenize=)
+   * =srfi-13= (for =string-pad= & =string-tokenize=)\dagger
    * =args= (for =args=)
 
 ** Usage
@@ -44,3 +47,6 @@ Output: (14)
 ** Note
 Only integers are supported for the time being.
 Inexact numbers get rounded to the nearest exact integer.
+
+\dagger: =srfi-13= /possibly/ works without installing the egg
+since it's a built-in =unit=.
