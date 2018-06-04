@@ -4,8 +4,11 @@
 (define *verbose* (make-parameter #f))
 
 (define (rpn:version)
-  (print "rpnscm v0.12")
-  (print "All wrongs reversed.")
+  (print   "rpnscm v0.13")
+  (display "This project's source code is subject to the terms of the ")
+  (print   "Mozilla Public Licence v2.0")
+  (display "If a copy of the MPL was not distributed with this file, ")
+  (print   "you can obtain one at http://mozilla.org/MPL/2.0/")
   (exit))
 
 (define (rpn:usage)
@@ -18,7 +21,7 @@
   (list
    (args:make-option (h help) #:none "Print this help message"
                      (rpn:usage))
-   (args:make-option (V version) #:none "Display version"
+   (args:make-option (V version) #:none "Display version and licence"
                      (rpn:version))
    (args:make-option (o operators) #:none "Print list of operators"
                      (rpn:operator-usage))
@@ -33,6 +36,9 @@
    (args:make-option (v verbose) #:none "Explain each step"
                      (*verbose* #t))))
 
-(if (null? (command-line-arguments))
+(if (or (null? (command-line-arguments))
+        (eq? (command-line-arguments) '("-v")))
     (rpn:usage)
     (args:parse (command-line-arguments) opts))
+
+(print (command-line-arguments))

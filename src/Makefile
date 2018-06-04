@@ -5,7 +5,7 @@ DESTDIR = bin
 
 all: build clean
 
-build: rpn
+build: main
 
 clean:
 	rm -f *.c
@@ -24,5 +24,5 @@ parse: op
 doc:
 	$(CSC) -c -J doc.scm -unit rpn-doc
 
-rpn: parse doc
-	$(CSC) -o rpn rpn.scm op.o parse.o doc.o -uses rpn-doc -uses rpn-parse
+main: parse doc
+	$(CSC) -o rpn main.scm op.o parse.o doc.o -uses rpn-doc -uses rpn-parse

@@ -1,6 +1,7 @@
 (module rpn-parse (rpn:calculate rpn:repl)
-  (import chicken scheme extras)
-  (import (only srfi-13 string-pad string-tokenize))
+  (import chicken scheme)
+  (require-extension (only srfi-13 string-pad string-tokenize))
+  (use (only extras read-line))
   (import rpn-op)
 
   (define *padding* (make-parameter 0))
