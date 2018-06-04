@@ -38,8 +38,6 @@
                      (*verbose* #t))))
 
 (if (or (null? (command-line-arguments))
-        (eq? (command-line-arguments) '("-v")))
+        (equal? (command-line-arguments) '("-v")))
     (rpn:usage)
     (args:parse (command-line-arguments) opts))
-
-(print (command-line-arguments))
