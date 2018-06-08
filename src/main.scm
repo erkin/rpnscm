@@ -5,11 +5,12 @@
 
 (define (rpn:version)
   (print   "rpnscm v0.13")
-  (print   "Copyright (C) Erkin Batu Altunbaş")
-  (display "This project's source code is subject to the terms of the ")
-  (print   "Mozilla Public Licence v2.0")
+  (print   "Copyright (C) 2018 Erkin Batu Altunbaş")
+  (newline)
+  (display "Each file of this project's source code is subject ")
+  (print   "to the terms of the Mozilla Public Licence v2.0")
   (display "If a copy of the MPL was not distributed with this file, ")
-  (print   "you can obtain one at http://mozilla.org/MPL/2.0/")
+  (print   "you can obtain one at https://mozilla.org/MPL/2.0/")
   (exit))
 
 (define (rpn:usage)
