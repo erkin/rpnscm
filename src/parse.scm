@@ -22,19 +22,19 @@
   ;; procedure in `rpn:operators`
   ;; (rpn:eval '(1 2) '+) -> (list (+ (car '(1 2)) (cadr '(1 2)))) -> (3)
   
-  (define *padding* (make-parameter 0))
+  (define *padding* (make-parameter  0))
   (define *verbose* (make-parameter #f))
 
   (define (exp-check exp new-exp)
     (cond
      ((null? exp) ; If there are no values,
-      new-exp) ; just return what we have so far.
+      new-exp)    ; just return what we have so far.
      ((string->number (car exp)) ; Is it a number?
-      (exp-check (cdr exp) ; If so, make sure it's round and exact
-                 `(,@new-exp ; then push it and keep going.
+      (exp-check (cdr exp)       ; If so, make sure it's round and exact
+                 `(,@new-exp     ; then push it and keep going.
                    ,(inexact->exact (round (string->number (car exp)))))))
      ((assoc (string->symbol (car exp)) rpn:operators) ; Is it an operator?
-      (exp-check (cdr exp) ; if so, just push the symbol.
+      (exp-check (cdr exp)                        ; if so, just push the symbol.
                  `(,@new-exp
                    ,(string->symbol (car exp)))))
      (else ; Otherwise, pretend nothing happened.
