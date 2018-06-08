@@ -1,5 +1,5 @@
-* RPNSCM v0.13
-A primitive (but future-rich in near future) RPN calculator written in Scheme.
+* RPNSCM v0.14
+A primitive (but future-rich in near future, probably) RPN calculator written in Scheme.
 (Development branch.)
 
 This is effectively a top project for me to hack with CHICKEN Scheme.

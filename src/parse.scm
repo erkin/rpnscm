@@ -2,7 +2,7 @@
   (import chicken scheme)
   (require-extension (only srfi-13 string-pad string-tokenize))
   (use (only extras read-line))
-  (import rpn-op)
+  (import rpn-op rpn-colour)
 
   ;; Our entrance point, `rpn:calculate` or `rpn:repl`,
   ;; first tokenises the expression:
@@ -38,7 +38,7 @@
                  `(,@new-exp
                    ,(string->symbol (car exp)))))
      (else ; Otherwise, pretend nothing happened.
-      (print "Unrecognised (car exp): " (car exp))
+      (print (tint "Unrecognised token: " 'red) (car exp))
       new-exp)))
 
   (define (verbose-print exp stack step)

@@ -1,11 +1,11 @@
 (use args extras)
-(import rpn-parse rpn-doc)
+(import rpn-parse rpn-doc rpn-colour)
 
 (define *verbose* (make-parameter #f))
 
 (define (rpn:version)
-  (print   "rpnscm v0.13")
-  (print   "Copyright (C) 2018 Erkin Batu Altunbaş")
+  (print   (tint "rpnscm v0.14" 'cyan 'bold))
+  (print   (tint "Copyright (C) 2018 Erkin Batu Altunbaş" 'cyan))
   (newline)
   (display "Each file of this project's source code is subject ")
   (print   "to the terms of the Mozilla Public Licence v2.0")
@@ -14,7 +14,8 @@
   (exit))
 
 (define (rpn:usage)
-  (print "Usage: " (car (argv)) " -e \"EXPRESSION\"")
+  (print (tint "Usage: " 'green)
+         (car (argv)) " -e \"EXPRESSION\"")
   (print (args:usage opts))
   (print "See -o for a list of operators.")
   (exit))
