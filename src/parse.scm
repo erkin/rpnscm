@@ -42,8 +42,11 @@
       new-exp)))
 
   (define (verbose-print exp stack step)
-    (display (string-pad (number->string step) (*padding*)))
-    (print ": " (cdr exp) " -> " (car exp) " -> " stack))
+    (display (tint (string-pad (number->string step) (*padding*)) 'green))
+    (print
+     (tint  ": "  'green) (tint (cdr exp) 'cyan)
+     (tint " -> " 'green) (tint (car exp) 'cyan)
+     (tint " -> " 'green) (tint   stack   'cyan)))
 
   (define (calc-step exp stack step)
     (cond
@@ -57,10 +60,10 @@
   (define (rpn:calculate expression #!optional (verbose #f))
     (*verbose* verbose)
     (let ((exp (exp-check (string-tokenize expression) '())))
-      (when (*verbose*)  ; TODO make padding cleaner with alignment
+      (when (*verbose*)  ; TODO make padding cleaner w/ alignment
         (*padding* (+ 1 (quotient (length exp) 10)))
-        (print "Input: " exp))
-      (print (calc-step exp '() 0)))
+        (print (tint "Input: " 'yellow) (tint exp 'cyan)))
+      (print (if (*verbose*) (tint "Output: " 'yellow) "") (tint (calc-step exp '() 0) 'cyan)))
     (exit))
   
   (define (rpn:repl #!optional (verbose #f))
@@ -76,5 +79,7 @@
                 (calc-step (exp-check (string-tokenize line) stack) '() 0))))))
     (*verbose* verbose)
     (*padding* 2)        ; TODO fix verbose behaviour in REPL
-    (print (rpn:read '()))
+    (print
+     (if (*verbose*) (tint "Output: " 'yellow) " ")
+     (tint (rpn:read '()) 'cyan))
     (exit)))

@@ -1,5 +1,6 @@
 (module rpn-colour (tint)
   (import chicken scheme)
+  (use (only data-structures ->string))
   (define (tint string colour #!optional (emphasis 'regular))
     (string-append "\033["
                    (case emphasis
@@ -16,5 +17,4 @@
                      ((purple) "5")
                      ((cyan)   "6")
                      ((white)  "7"))
-                   "m" string "\033[0m")))
-
+                   "m" (->string string) "\033[0m")))

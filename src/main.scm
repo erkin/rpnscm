@@ -17,7 +17,6 @@
   (print (tint "Usage: " 'green)
          (car (argv)) " -e \"EXPRESSION\"")
   (print (args:usage opts))
-  (print "See -o for a list of operators.")
   (exit))
 
 (define opts
