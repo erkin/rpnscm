@@ -26,7 +26,7 @@
   ;; "5"
   ;; (3)
   (define (rpn:pop stack)
-    (print " " (tint (number->string (car stack)) 'yellow))
+    (print " " (tint (car stack) 'yellow))
     (cdr stack))
 
   ;; peek
@@ -34,7 +34,7 @@
   ;; "5"
   ;; (3 5)
   (define (rpn:pek stack)
-    (print " " (tint (number->string (car stack)) 'green))
+    (print " " (tint (car stack) 'green))
     stack)
 
   ;; sign

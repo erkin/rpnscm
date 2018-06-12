@@ -1,18 +1,28 @@
-(module rpn-doc (rpn:operator-usage)
+(module rpn-doc (rpn:operator-usage rpn:help-messages)
   (import chicken scheme)
   (import rpn-colour)
 
   (define (list-tint op-list)
-     (string-append
-      (tint (car op-list) 'cyan)
-      " "
-      (tint (cadr op-list) 'green)))
+    (string-append
+     (tint (car op-list) 'cyan)
+     (tint ": " 'cyan)
+     (tint (cadr op-list) 'green)))
 
   (define (alist-tint op-alist)
     (cons
      (car op-alist)
      (list-tint (cdr op-alist))))
 
+  (define rpn:help-messages
+    (map list-tint
+         '(("-h, --help" "Print this help message")
+           ("-V, --version" "Display version and licence information")
+           ("-o, --operators" "Print a formatted list of operators")
+           ("-e, --eval EXPRESSION" "Evaluate EXPRESSION")
+           ("-i, --interactive" "Start interactive mode")
+           ("-f, --file FILE" "Load expression from file")
+           ("-v, --verbose" "Explain each step"))))
+  
   (define rpn:maths-operators
     (map alist-tint
          '((n . ("( i ->   i)" "Negation"))
@@ -39,19 +49,19 @@
 
   (define rpn:notation
     (map list-tint
-     '(("(nil ->    ):" "New value")
-       ("( i  ->    ):" "Pop one")
-       ("(ii  ->    ):" "Pop two")
-       ("( n  ->    ):" "Pop all")
-       ("(    -> nil):" "Push nothing")
-       ("(    ->   i):" "Push one")
-       ("(    ->  ii):" "Push two")
-       ("(    ->   n):" "Map"))))
+         '(("(nil ->    )" "New value")
+           ("( i  ->    )" "Pop one")
+           ("(ii  ->    )" "Pop two")
+           ("( n  ->    )" "Pop all")
+           ("(    -> nil)" "Push nothing")
+           ("(    ->   i)" "Push one")
+           ("(    ->  ii)" "Push two")
+           ("(    ->   n)" "Map"))))
 
-  (define (rpn:operator-usage)
+  (define (rpn:operator-usage #!optional arg)
     (define (alist-print op)
-      (display (car op))
-      (display ": ")
+      (print* (car op))
+      (print* ": ")
       (print (cdr op)))
     (print "Notation:")
     (for-each print rpn:notation)

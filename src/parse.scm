@@ -7,7 +7,7 @@
   ;; Our entrance point, `rpn:calculate` or `rpn:repl`,
   ;; first tokenises the expression:
   ;; "1 2.08 +" -> ("1" "2.08" "+")
-  
+
   ;; Then calls `exp-check` to check for unrecognised tokens
   ;; and to round inexact numbers to integers:
   ;; ("1" "2.08" "+") -> (1 2 '+)
@@ -42,7 +42,7 @@
       new-exp)))
 
   (define (verbose-print exp stack step)
-    (display (tint (string-pad (number->string step) (*padding*)) 'green))
+    (print* (tint (string-pad (number->string step) (*padding*)) 'green))
     (print
      (tint  ": "  'green) (tint (cdr exp) 'cyan)
      (tint " -> " 'green) (tint (car exp) 'cyan)
