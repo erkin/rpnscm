@@ -15,7 +15,7 @@
 
   (define rpn:help-messages
     (map list-tint
-         '(("-h, --help" "Print this help message")
+         '(("-h, -?, --help" "Print this help message")
            ("-V, --version" "Display version and licence information")
            ("-o, --operators" "Print a formatted list of operators")
            ("-e, --eval EXPRESSION" "Evaluate EXPRESSION")

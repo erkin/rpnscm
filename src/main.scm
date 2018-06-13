@@ -4,7 +4,7 @@
 
 (define *verbose* (make-parameter #f))
 
-(define (rpn:version #!optional arg) ; ignore arguments
+(define (rpn:version #!optional args) ; ignore arguments
   (print   (tint "rpnscm v0.15" 'cyan 'bold))
   (print   (tint "Copyright (C) 2018 Erkin Batu Altunbaş" 'cyan))
   (newline)
@@ -14,12 +14,24 @@
   (print  "you can obtain one at https://mozilla.org/MPL/2.0/")
   (exit))
 
-(define (rpn:usage #!optional arg)
-  (unless (null? arg)
-    (print (tint "Unrecognised option: " 'purple)
-           (tint "-" 'yellow)
-           (tint (car (option-names arg)) 'yellow))
-    (newline))
+(define (rpn:usage #!optional opt name arg loads)
+  (cond
+   ((string? name)
+    (unless (string=? name "help")
+      (newline)
+      (print
+       (tint "Unrecognised long option: " 'purple)
+       (tint "--" 'yellow)
+       (tint name 'yellow))
+      (newline)))
+   ((char? name)
+    (unless (or (char=? name #\h) (char=? name #\?))
+      (newline)
+      (print
+       (tint "Unrecognised short option: " 'purple)
+       (tint "-" 'yellow)
+       (tint name 'yellow))
+      (newline))))
   (display (tint "Usage: " 'green))
   (print (car (argv)) " -e " (tint "\"EXPRESSION\"" 'yellow))
   (display "       ")
@@ -29,25 +41,27 @@
 
 (define rpn:opts
   (list
-   (option '(#\h "help") #f #f
+   (option '(#\h #\? "help") #f #f
            rpn:usage)
    (option '(#\V "version") #f #f
            rpn:version)
    (option '(#\v "verbose") #f #f
-           (lambda ()
+           (lambda _
              (*verbose* #t)))
    (option '(#\o "operators") #f #f
            rpn:operator-usage)
    (option '(#\e "eval" "evaluate") #t #f
-           (lambda (exp)
-             (rpn:calculate exp (*verbose*))))
+           (lambda (op name arg loads)
+             (rpn:calculate arg (*verbose*))))
    (option '(#\i "interactive" "repl") #f #f
-           (lambda ()
+           (lambda _
              (rpn:repl (*verbose*))))
    (option '(#\f "file") #t #f
-           (lambda (file)
+           (lambda (opt name arg loads)
              (rpn:calculate
-              (with-input-from-file file read-string)
+              (with-input-from-file arg read-string)
               (*verbose*))))))
 
-(args-fold (command-line-arguments) rpn:opts rpn:usage #f #f)
+(if (null? (command-line-arguments))
+    (rpn:usage)
+    (args-fold (command-line-arguments) rpn:opts rpn:usage #f #f))
