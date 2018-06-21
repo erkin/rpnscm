@@ -1,28 +1,38 @@
 (module rpn-doc (rpn:operator-usage rpn:help-messages)
   (import chicken scheme)
+  (require-extension (only srfi-13 string-pad-right))
+  (require-extension (only srfi-1 zip))
+  (import (only data-structures compose))
   (import rpn-colour)
 
   (define (list-tint op-list)
     (string-append
      (tint (car op-list) 'cyan)
-     (tint ": " 'cyan)
+     " "
      (tint (cadr op-list) 'green)))
 
   (define (alist-tint op-alist)
     (cons
-     (car op-alist)
+     (tint (car op-alist) 'purple)
      (list-tint (cdr op-alist))))
+
+  (define (list-pad-by-max s-lst) ; surely there's a better way to do this
+    (define car-max  (add1 (apply max (map (compose string-length car)  s-lst))))
+    (define cadr-max (add1 (apply max (map (compose string-length cadr) s-lst))))
+    (zip (map (lambda (s) (string-pad-right (car s)  car-max))  s-lst)
+         (map (lambda (s) (string-pad-right (cadr s) cadr-max)) s-lst)))
 
   (define rpn:help-messages
     (map list-tint
-         '(("-h, -?, --help" "Print this help message")
-           ("-V, --version" "Display version and licence information")
-           ("-o, --operators" "Print a formatted list of operators")
-           ("-e, --eval EXPRESSION" "Evaluate EXPRESSION")
-           ("-i, --interactive" "Start interactive mode")
-           ("-f, --file FILE" "Load expression from file")
-           ("-v, --verbose" "Explain each step"))))
-  
+         (list-pad-by-max
+          '(("-h, -?, --help" "Print this help message")
+            ("-V, --version" "Display version and licence information")
+            ("-o, --operators" "Print a formatted list of operators")
+            ("-e, --eval EXPRESSION" "Evaluate EXPRESSION")
+            ("-i, --interactive" "Start interactive mode")
+            ("-f, --file FILE" "Load expression from file")
+            ("-v, --verbose" "Explain each step")))))
+
   (define rpn:maths-operators
     (map alist-tint
          '((n . ("( i ->   i)" "Negation"))
@@ -53,10 +63,10 @@
            ("( i  ->    )" "Pop one")
            ("(ii  ->    )" "Pop two")
            ("( n  ->    )" "Pop all")
-           ("(    -> nil)" "Push nothing")
+           ("(    -> nil)" "Discard")
            ("(    ->   i)" "Push one")
            ("(    ->  ii)" "Push two")
-           ("(    ->   n)" "Map"))))
+           ("(    ->   n)" "Sweep"))))
 
   (define (rpn:operator-usage #!optional arg)
     (define (alist-print op)
@@ -66,7 +76,7 @@
     (print "Notation:")
     (for-each print rpn:notation)
     (newline)
-    (print "Maths operators:")
+    (print "Mathematical operators:")
     (for-each alist-print rpn:maths-operators)
     (newline)
     (print "Stack operators:")

@@ -1,5 +1,5 @@
 (use extras)
-(require-extension srfi-37)
+(require-extension (only srfi-37 args-fold option))
 (import rpn-parse rpn-doc rpn-colour)
 
 (define *verbose* (make-parameter #f))
@@ -32,10 +32,10 @@
        (tint "-" 'yellow)
        (tint name 'yellow))
       (newline))))
-  (display (tint "Usage: " 'green))
-  (print (car (argv)) " -e " (tint "\"EXPRESSION\"" 'yellow))
-  (display "       ")
-  (print (car (argv)) " -f " (tint "\"FILE\"" 'yellow))
+  (print* (tint "Usage: " 'green))
+  (print  (car (argv)) " -e " (tint "\"EXPRESSION\"" 'yellow))
+  (print* "       ")
+  (print  (car (argv)) " -f " (tint "\"FILE\"" 'yellow))
   (for-each print rpn:help-messages)
   (exit))
 

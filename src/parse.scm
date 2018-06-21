@@ -24,29 +24,32 @@
   
   (define *padding* (make-parameter  0))
   (define *verbose* (make-parameter #f))
+  (define *repl*    (make-parameter #f))
 
   (define (exp-check exp new-exp)
     (cond
-     ((null? exp) ; If there are no values,
-      new-exp)    ; just return what we have so far.
-     ((string->number (car exp)) ; Is it a number?
-      (exp-check (cdr exp)       ; If so, make sure it's round and exact
-                 `(,@new-exp     ; then push it and keep going.
+     ((null? exp)                   ; If there are no values,
+      new-exp)                      ; just return what we have so far.
+     ((string->number (car exp))    ; Is it a number?
+      (exp-check (cdr exp)     ; If so, make sure it's round and exact
+                 `(,@new-exp   ; then push it and keep going.
                    ,(inexact->exact (round (string->number (car exp)))))))
      ((assoc (string->symbol (car exp)) rpn:operators) ; Is it an operator?
-      (exp-check (cdr exp)                        ; if so, just push the symbol.
+      (exp-check (cdr exp)              ; if so, just push the symbol.
                  `(,@new-exp
                    ,(string->symbol (car exp)))))
-     (else ; Otherwise, pretend nothing happened.
+     (else                      ; Otherwise, pretend nothing happened.
       (print (tint "Unrecognised token: " 'red) (car exp))
       new-exp)))
 
   (define (verbose-print exp stack step)
-    (print* (tint (string-pad (number->string step) (*padding*)) 'green))
-    (print
-     (tint  ": "  'green) (tint (cdr exp) 'cyan)
-     (tint " -> " 'green) (tint (car exp) 'cyan)
-     (tint " -> " 'green) (tint   stack   'cyan)))
+    (unless (*repl*)
+      (print* (tint (string-pad (number->string step) (*padding*)) 'green))
+      (print* (tint  ":"  'green)))
+    (print " "
+           (tint (cdr exp) 'cyan)
+           (tint " -> " 'green) (tint (car exp) 'cyan)
+           (tint " -> " 'green) (tint   stack   'cyan)))
 
   (define (calc-step exp stack step)
     (cond
@@ -59,8 +62,9 @@
 
   (define (rpn:calculate expression #!optional (verbose #f))
     (*verbose* verbose)
+    (*repl* #f)
     (let ((exp (exp-check (string-tokenize expression) '())))
-      (when (*verbose*)  ; TODO make padding cleaner w/ alignment
+      (when (*verbose*)       ; TODO make padding cleaner w/ alignment
         (*padding* (+ 1 (quotient (length exp) 10)))
         (print (tint "Input: " 'yellow) (tint exp 'cyan)))
       (print (if (*verbose*) (tint "Output: " 'yellow) "") (tint (calc-step exp '() 0) 'cyan)))
@@ -72,13 +76,13 @@
         (cond ((eof-object? line)
                stack)    ; exit on EOF
               ((zero? (string-length line))
-               (rpn:read ; nothing to read if the user just pressed return
-                stack))
+               (rpn:read ; Nothing to read if the user just pressed return
+                stack))  ; pretend nothing happened.
               (else
                (rpn:read
                 (calc-step (exp-check (string-tokenize line) stack) '() 0))))))
     (*verbose* verbose)
-    (*padding* 2)        ; TODO fix verbose behaviour in REPL
+    (*repl* #t)
     (print
      (if (*verbose*) (tint "Output: " 'yellow) " ")
      (tint (rpn:read '()) 'cyan))
