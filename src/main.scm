@@ -1,43 +1,72 @@
-(use args extras)
-(import rpn-parse rpn-doc)
+(require-extension (only srfi-37 args-fold option option-processor))
+(import rpn-parse rpn-doc rpn-colour)
 
 (define *verbose* (make-parameter #f))
 
-(define (rpn:version)
-  (print   "rpnscm v0.13")
-  (print   "Copyright (C) Erkin Batu Altunbaş")
-  (display "This project's source code is subject to the terms of the ")
-  (print   "Mozilla Public Licence v2.0")
-  (display "If a copy of the MPL was not distributed with this file, ")
-  (print   "you can obtain one at http://mozilla.org/MPL/2.0/")
+(define (rpn:version #!optional args) ; ignore arguments
+  (print   (tint "rpnscm v0.17" 'cyan 'bold))
+  (print   (tint "Copyright (C) 2018 Erkin Batu Altunbaş" 'cyan))
+  (newline)
+  (print* "Each file of this project's source code is subject ")
+  (print  "to the terms of the Mozilla Public Licence v2.0")
+  (print* "If a copy of the MPL was not distributed with this file, ")
+  (print  "you can obtain one at https://mozilla.org/MPL/2.0/")
   (exit))
 
-(define (rpn:usage)
-  (print "Usage: " (car (argv)) " -e \"EXPRESSION\"")
-  (print (args:usage opts))
-  (print "See -o for a list of operators.")
-  (exit))
+(define (rpn:usage #!optional opt name arg loads)
+  (define unrecognised
+    (if opt ; When called without options, the value of opt is #f.
+        (if (string? name)
+            (if (string=? name "help")
+                #f
+                'long)
+            (if (or (char=? name #\?) (char=? name #\h))
+                #f
+                'short)) ; We don't actually check for 'short anywhere.
+        #f))
+  (when unrecognised
+    (newline)
+    (print
+     (tint "Unrecognised " 'purple 'bold)
+     (tint (if (eq? unrecognised 'long) "long" "short") 'purple 'bold)
+     (tint " option: " 'purple 'bold)
+     (tint (if (eq? unrecognised 'long) "--"   "-")     'yellow)
+     (tint name 'yellow))
+    (newline))
 
-(define opts
+  (print* (tint "Usage: " 'green))
+  (print  (car (argv)) " -e " (tint "\"EXPRESSION\"" 'yellow))
+  (print* "       ")
+  (print  (car (argv)) " -f " (tint "FILE" 'yellow))
+  (for-each print rpn:help-messages)
+  (exit (if unrecognised 1 0)))
+
+(define rpn:opts
   (list
-   (args:make-option (h help) #:none "Print this help message"
-                     (rpn:usage))
-   (args:make-option (V version) #:none "Display version and licence"
-                     (rpn:version))
-   (args:make-option (o operators) #:none "Print list of operators"
-                     (rpn:operator-usage))
-   (args:make-option (e eval) (required: "\"EXPRESSION\"") "Evaluate EXPRESSION"
-                     (rpn:calculate arg (*verbose*)))
-   (args:make-option (i interactive) #:none "Start interactive mode"
-                     (rpn:repl (*verbose*)))
-   (args:make-option (f file) (required: "FILE") "Load expression from FILE"
-                     (rpn:calculate
-                      (with-input-from-file arg read-string)
-                      (*verbose*)))
-   (args:make-option (v verbose) #:none "Explain each step"
-                     (*verbose* #t))))
+   (option '(#\h #\? "help") #f #f
+           rpn:usage)
+   (option '(#\V "version") #f #f
+           rpn:version)
+   (option '(#\v "verbose") #f #f
+           (lambda _
+             (*verbose* #t)))
+   (option '(#\o "operators") #f #f
+           rpn:operator-usage)
+   (option '(#\e "eval" "evaluate") #t #f
+           (lambda (op name arg loads)
+             (rpn:calculate arg (*verbose*))))
+   (option '(#\i "interactive" "repl") #f #f
+           (lambda _
+             (rpn:repl (*verbose*))))
+   (option '(#\f "file") #t #f
+           (lambda (opt name arg loads)
+             (rpn:calculate
+              (with-input-from-file arg read-string)
+              (*verbose*))))))
 
-(if (or (null? (command-line-arguments))
-        (equal? (command-line-arguments) '("-v")))
-    (rpn:usage)
-    (args:parse (command-line-arguments) opts))
+(define (main args)
+  (if (pair? args)
+      (args-fold args rpn:opts rpn:usage cons '()))
+  (rpn:usage))
+
+(main (command-line-arguments))

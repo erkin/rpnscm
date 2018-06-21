@@ -1,5 +1,6 @@
 (module rpn-op (rpn:eval rpn:operators)
   (import chicken scheme)
+  (import rpn-colour)
 
 ;;; Monadic operators
   ;; negate
@@ -25,7 +26,7 @@
   ;; "5"
   ;; (3)
   (define (rpn:pop stack)
-    (print " " (car stack))
+    (print " " (tint (car stack) 'yellow))
     (cdr stack))
 
   ;; peek
@@ -33,7 +34,7 @@
   ;; "5"
   ;; (3 5)
   (define (rpn:pek stack)
-    (print " " (car stack))
+    (print " " (tint (car stack) 'green))
     stack)
 
   ;; sign
@@ -137,13 +138,13 @@
      ((integer? token)         ; Push new number
       `(,token ,@stack))       ; It's an operator if it's not a number
      ((null? stack)
-      (print "Stack empty.")   ; Return stack if it's empty
-      stack)
+      (print (tint "Stack empty." 'red))
+      stack)                   ; Return stack if it's empty
      ((assoc token rpn:dyadic) ; Make sure the stack has 2+ elements
       (if (pair? (cdr stack))  ; For dyadic operations only
           ((cdr (assoc token rpn:dyadic)) stack)
           (begin
-            (print "Stack too short.")
+            (print (tint "Stack too short." 'red))
             stack)))           ; Return stack otherwise
      (else                     ; Other operations require at least 1 element
       ((cdr (assoc token rpn:operators)) stack)))))
