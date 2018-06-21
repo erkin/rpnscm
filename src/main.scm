@@ -1,4 +1,4 @@
-(require-extension (only srfi-37 args-fold option option-processor))
+(require-extension (only srfi-37 args-fold option))
 (import rpn-parse rpn-doc rpn-colour)
 
 (define *verbose* (make-parameter #f))
@@ -25,12 +25,10 @@
                 'short)) ; We don't actually check for 'short anywhere.
         #f))
   (when unrecognised
-    (newline)
     (print
-     (tint "Unrecognised " 'purple 'bold)
-     (tint (if (eq? unrecognised 'long) "long" "short") 'purple 'bold)
-     (tint " option: " 'purple 'bold)
-     (tint (if (eq? unrecognised 'long) "--"   "-")     'yellow)
+     (tint "error: " 'red 'bold)
+     "Invalid " (if (eq? unrecognised 'long) "argument " "option ")
+     (tint (if (eq? unrecognised 'long) "--"   "-") 'yellow)
      (tint name 'yellow))
     (newline))
 
@@ -54,12 +52,20 @@
            rpn:operator-usage)
    (option '(#\e "eval" "evaluate") #t #f
            (lambda (op name arg loads)
+             (unless arg
+               (print (tint "error: " 'red 'bold) "No expression provided.")
+               (print "See " (tint "--help" 'green) " for more information.")
+               (exit -1))
              (rpn:calculate arg (*verbose*))))
    (option '(#\i "interactive" "repl") #f #f
            (lambda _
              (rpn:repl (*verbose*))))
    (option '(#\f "file") #t #f
            (lambda (opt name arg loads)
+             (unless arg
+               (print (tint "error: " 'red 'bold) "No filename specified.")
+               (print "See " (tint "--help" 'green) " for more information.")
+               (exit -1))
              (rpn:calculate
               (with-input-from-file arg read-string)
               (*verbose*))))))
