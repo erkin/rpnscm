@@ -1,10 +1,10 @@
-(require-extension (only srfi-37 args-fold option))
+(require-extension (only srfi-37 args-fold option option-processor))
 (import rpn-parse rpn-doc rpn-colour)
 
 (define *verbose* (make-parameter #f))
 
 (define (rpn:version #!optional args) ; ignore arguments
-  (print   (tint "rpnscm v0.15" 'cyan 'bold))
+  (print   (tint "rpnscm v0.17" 'cyan 'bold))
   (print   (tint "Copyright (C) 2018 Erkin Batu Altunbaş" 'cyan))
   (newline)
   (print* "Each file of this project's source code is subject ")
@@ -14,29 +14,32 @@
   (exit))
 
 (define (rpn:usage #!optional opt name arg loads)
-  (cond
-   ((string? name)
-    (unless (string=? name "help")
-      (newline)
-      (print
-       (tint "Unrecognised long option: " 'purple)
-       (tint "--" 'yellow)
-       (tint name 'yellow))
-      (newline)))
-   ((char? name)
-    (unless (or (char=? name #\h) (char=? name #\?))
-      (newline)
-      (print
-       (tint "Unrecognised short option: " 'purple)
-       (tint "-" 'yellow)
-       (tint name 'yellow))
-      (newline))))
+  (define unrecognised
+    (if opt ; When called without options, the value of opt is #f.
+        (if (string? name)
+            (if (string=? name "help")
+                #f
+                'long)
+            (if (or (char=? name #\?) (char=? name #\h))
+                #f
+                'short)) ; We don't actually check for 'short anywhere.
+        #f))
+  (when unrecognised
+    (newline)
+    (print
+     (tint "Unrecognised " 'purple 'bold)
+     (tint (if (eq? unrecognised 'long) "long" "short") 'purple 'bold)
+     (tint " option: " 'purple 'bold)
+     (tint (if (eq? unrecognised 'long) "--"   "-")     'yellow)
+     (tint name 'yellow))
+    (newline))
+
   (print* (tint "Usage: " 'green))
   (print  (car (argv)) " -e " (tint "\"EXPRESSION\"" 'yellow))
   (print* "       ")
-  (print  (car (argv)) " -f " (tint "\"FILE\"" 'yellow))
+  (print  (car (argv)) " -f " (tint "FILE" 'yellow))
   (for-each print rpn:help-messages)
-  (exit))
+  (exit (if unrecognised 1 0)))
 
 (define rpn:opts
   (list
@@ -61,6 +64,9 @@
               (with-input-from-file arg read-string)
               (*verbose*))))))
 
-(if (null? (command-line-arguments))
-    (rpn:usage)
-    (args-fold (command-line-arguments) rpn:opts rpn:usage #f #f))
+(define (main args)
+  (if (pair? args)
+      (args-fold args rpn:opts rpn:usage cons '()))
+  (rpn:usage))
+
+(main (command-line-arguments))

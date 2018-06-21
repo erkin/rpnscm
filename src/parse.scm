@@ -38,7 +38,7 @@
       (exp-check (cdr exp)              ; if so, just push the symbol.
                  `(,@new-exp
                    ,(string->symbol (car exp)))))
-     (else                      ; Otherwise, pretend nothing happened.
+     (else                     ; Otherwise, pretend nothing happened.
       (print (tint "Unrecognised token: " 'red) (car exp))
       new-exp)))
 
@@ -46,15 +46,15 @@
     (unless (*repl*)
       (print* (tint (string-pad (number->string step) (*padding*)) 'green))
       (print* (tint  ":"  'green)))
-    (print " "
-           (tint (cdr exp) 'cyan)
-           (tint " -> " 'green) (tint (car exp) 'cyan)
-           (tint " -> " 'green) (tint   stack   'cyan)))
+    (print
+           " "            (tint (cdr exp) 'cyan)
+     (tint " -> " 'green) (tint (car exp)           'cyan)
+     (tint " -> " 'green) (tint (reverse stack)     'cyan)))
 
   (define (calc-step exp stack step)
     (cond
      ((null? exp) ; When we're done
-      stack) ; just return the stack.
+      (reverse stack))    ; just return the stack.
      (else
       (if (*verbose*) ; this is ugly
           (verbose-print exp stack step))
