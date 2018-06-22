@@ -1,8 +1,9 @@
 (require-extension (only srfi-37 args-fold option))
+(use (only extras format))
 (import rpn-parse rpn-doc rpn-colour)
 
 (define (rpn:version #!optional args) ; ignore arguments
-  (print   (tint "rpnscm v0.17" 'cyan 'bold))
+  (print   (tint "rpnscm v0.17" 'cyan #:style 'bold))
   (print   (tint "Copyright (C) 2018 Erkin Batu Altunbaş" 'cyan))
   (newline)
   (print* "Each file of this project's source code is subject ")
@@ -20,26 +21,30 @@
                     #f
                     'long)
                 (if (or (char=? name #\?) (char=? name #\h))
-                    #f ; We don't actually check for 'short anywhere.
+                    #f
                     'short))
             'operand)
         #f))
   (when unrecognised
     (print
-     (tint "error: " 'red 'bold)
+     (tint "error: " 'red #:style 'bold)
      "Unrecognised "
      (case unrecognised
        ((long) (string-append "argument: " (tint (string-append "--" name) 'yellow)))
        ((short) (string-append "option: "  (tint (string #\- name) 'yellow)))
        ((operand) (string-append "operand: " (tint opt 'yellow)))))
     (newline))
-
   (print* (tint "Usage: " 'green))
   (print  (car (argv)) " -e " (tint "\"EXPRESSION\"" 'yellow))
   (print* "       ")
   (print  (car (argv)) " -f " (tint "FILE" 'yellow))
   (for-each print rpn:help-messages)
   (exit (if unrecognised 1 0)))
+
+(define (rpn:err error)
+  (print (tint "error: " 'red 'bold) error)
+  (print "See " (tint "--help" 'green) " for more information.")
+  (exit -1))
 
 (define rpn:opts
   (list
@@ -48,32 +53,34 @@
    (option '(#\V "version") #f #f
            rpn:version)
    (option '(#\v "verbose") #f #f
-           (lambda _ #t))
+           (lambda _ 'verbose))
    (option '(#\o "operators") #f #f
            rpn:operator-usage)
    (option '(#\e "eval" "evaluate") #t #f
-           (lambda (op name arg seed)
-             (unless arg
-               (print (tint "error: " 'red 'bold) "No expression provided.")
-               (print "See " (tint "--help" 'green) " for more information.")
-               (exit -1))
-             (rpn:calculate arg seed)))
+           (lambda (opt name arg seed)
+             (if (not arg)
+                 (rpn:err "No expression provided."))
+             (rpn:calculate arg (eq? seed 'verbose))))
    (option '(#\i "interactive" "repl") #f #f
-           (lambda _
-             (rpn:repl seed)))
+           (lambda (opt name arg seed)
+             (rpn:repl (eq? seed 'verbose))))
    (option '(#\f "file") #t #f
            (lambda (opt name arg seed)
-             (unless arg
-               (print (tint "error: " 'red 'bold) "No filename specified.")
-               (print "See " (tint "--help" 'green) " for more information.")
-               (exit -1))
+             (if (not arg)
+                 (rpn:err "No filename specified."))
              (rpn:calculate
               (with-input-from-file arg read-string)
-              seed)))))
+              (eq? seed 'verbose))))
+   (option '(#\s "shunt") #t #f
+           (lambda (opt name arg seed)
+             (if (not arg)
+                 (rpn:err "No expression provided."))
+             (print "This is a stub. Sorry.")))))
 
 (define (main args)
   (if (pair? args)
       (args-fold args rpn:opts rpn:usage rpn:usage #f))
-  (rpn:usage))
+  (rpn:usage)
+  (exit))
 
 (main (command-line-arguments))

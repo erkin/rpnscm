@@ -2,7 +2,7 @@
   (import chicken scheme)
   (require-extension (only srfi-13 string-pad-right))
   (require-extension (only srfi-1 zip))
-  (import (only data-structures compose))
+  (use (only data-structures compose))
   (import rpn-colour)
 
   (define (list-tint op-list)
@@ -31,6 +31,7 @@
             ("-e, --eval EXPRESSION" "Evaluate EXPRESSION")
             ("-i, --interactive" "Start interactive mode")
             ("-f, --file FILE" "Load expression from file")
+            ("-s, --shunt EXPRESSION" "Convert infix EXPRESSION to RPN")
             ("-v, --verbose" "Explain each step")))))
 
   (define rpn:maths-operators
