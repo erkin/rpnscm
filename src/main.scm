@@ -30,15 +30,15 @@
      (tint "error: " 'red #:style 'bold)
      "Unrecognised "
      (case unrecognised
-       ((long) (string-append "argument: " (tint (string-append "--" name) 'yellow)))
-       ((short) (string-append "option: "  (tint (string #\- name) 'yellow)))
+       ((long)    (string-append "argument: " (tint (string-append "--" name) 'yellow)))
+       ((short)   (string-append "option: "  (tint (string #\- name) 'yellow)))
        ((operand) (string-append "operand: " (tint opt 'yellow)))))
     (newline))
   (print* (tint "Usage: " 'green))
   (print  (car (argv)) " -e " (tint "\"EXPRESSION\"" 'yellow))
   (print* "       ")
   (print  (car (argv)) " -f " (tint "FILE" 'yellow))
-  (for-each print rpn:help-messages)
+  (for-each print (map tint-list rpn:help-messages))
   (exit (if unrecognised 1 0)))
 
 (define (rpn:err error)

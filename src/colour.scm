@@ -1,6 +1,6 @@
-(module rpn-colour (tint)
+(module rpn-colour (tint tint-list)
   (import chicken scheme)
-  (use (only data-structures ->string))
+  (use (only data-structures ->string alist-ref))
 
   (define ansi-colours
     '((black   . "0")
@@ -29,12 +29,21 @@
       (framed     . "50")
       (circled    . "52")
       (overlined  . "53")))
+
+    (define (tint-list lst)
+      (if (null? lst)
+          ""
+          (string-append
+           (tint
+            (car lst) (car (list-ref (reverse ansi-colours) (length lst))))
+           " "
+           (tint-list (cdr lst)))))
   
   (define (tint string fg #!key (bg 'default) (style 'regular))
     (string-append
      "\033["
-     (cdr (assoc style ansi-styles))
-     ";3" (cdr (assoc fg ansi-colours))
-     ";4" (cdr (assoc bg ansi-colours))
+     (alist-ref style ansi-styles)
+     ";3" (alist-ref fg ansi-colours)
+     ";4" (alist-ref bg ansi-colours)
      "m"  (->string string)
      "\033[0m")))

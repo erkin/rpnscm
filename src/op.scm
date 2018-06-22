@@ -1,6 +1,7 @@
 (module rpn-op (rpn:eval rpn:operators)
   (import chicken scheme)
   (import rpn-colour)
+  (use (only data-structures alist-ref))
 
 ;;; Monadic operators
   ;; negate
@@ -142,9 +143,9 @@
       stack)                   ; Return stack if it's empty
      ((assoc token rpn:dyadic) ; Make sure the stack has 2+ elements
       (if (pair? (cdr stack))  ; For dyadic operations only
-          ((cdr (assoc token rpn:dyadic)) stack)
+          ((alist-ref token rpn:dyadic) stack)
           (begin
             (print (tint "Stack too short." 'red))
             stack)))           ; Return stack otherwise
      (else                     ; Other operations require at least 1 element
-      ((cdr (assoc token rpn:operators)) stack)))))
+      ((alist-ref token rpn:operators) stack)))))
