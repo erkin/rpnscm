@@ -1,3 +1,4 @@
+(declare (unit rpn-colour))
 (module rpn-colour (tint tint-list)
   (import chicken scheme)
   (use (only data-structures ->string alist-ref))
@@ -30,14 +31,14 @@
       (circled    . "52")
       (overlined  . "53")))
 
-    (define (tint-list lst)
-      (if (null? lst)
-          ""
-          (string-append
-           (tint
-            (car lst) (car (list-ref (reverse ansi-colours) (length lst))))
-           " "
-           (tint-list (cdr lst)))))
+  (define (tint-list lst)
+    (if (null? lst)
+        ""
+        (string-append
+         (tint
+          (car lst) (car (list-ref (reverse ansi-colours) (length lst))))
+         " "
+         (tint-list (cdr lst)))))
   
   (define (tint string fg #!key (bg 'default) (style 'regular))
     (string-append

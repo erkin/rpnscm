@@ -1,3 +1,5 @@
+(declare (unit rpn-doc))
+(declare (uses rpn-colour))
 (module rpn-doc (rpn:operator-usage rpn:help-messages)
   (import chicken scheme)
   (require-extension (only srfi-13 string-pad-right))

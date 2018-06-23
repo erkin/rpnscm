@@ -1,3 +1,6 @@
+(declare (uses rpn-doc))
+(declare (uses rpn-parse))
+(declare (uses rpn-colour))
 (require-extension (only srfi-37 args-fold option))
 (import rpn-parse rpn-doc rpn-colour)
 
