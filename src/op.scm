@@ -1,6 +1,9 @@
+(declare (unit rpn-op))
+(declare (uses rpn-colour))
 (module rpn-op (rpn:eval rpn:operators)
   (import chicken scheme)
   (import rpn-colour)
+  (use (only data-structures alist-ref))
 
 ;;; Monadic operators
   ;; negate
@@ -134,17 +137,17 @@
   (define rpn:operators (append rpn:monadic rpn:dyadic rpn:polyadic))
 
   (define (rpn:eval token stack)
-    (cond                      ; Each integer is a niladic push operator
-     ((integer? token)         ; Push new number
-      `(,token ,@stack))       ; It's an operator if it's not a number
+    (cond                    ; Each integer is a niladic push operator
+     ((integer? token)       ; Push new number
+      `(,token ,@stack))     ; It's an operator if it's not a number
      ((null? stack)
       (print (tint "Stack empty." 'red))
-      stack)                   ; Return stack if it's empty
-     ((assoc token rpn:dyadic) ; Make sure the stack has 2+ elements
-      (if (pair? (cdr stack))  ; For dyadic operations only
-          ((cdr (assoc token rpn:dyadic)) stack)
+      stack)                     ; Return stack if it's empty
+     ((assoc token rpn:dyadic)   ; Make sure the stack has 2+ elements
+      (if (pair? (cdr stack))    ; For dyadic operations only
+          ((alist-ref token rpn:dyadic) stack)
           (begin
             (print (tint "Stack too short." 'red))
-            stack)))           ; Return stack otherwise
-     (else                     ; Other operations require at least 1 element
-      ((cdr (assoc token rpn:operators)) stack)))))
+            stack)))     ; Return stack otherwise
+     (else               ; Other operations require at least 1 element
+      ((alist-ref token rpn:operators) stack)))))

@@ -1,3 +1,6 @@
+(declare (unit rpn-parse))
+(declare (uses rpn-op))
+(declare (uses rpn-colour))
 (module rpn-parse (rpn:calculate rpn:repl)
   (import chicken scheme)
   (require-extension (only srfi-13 string-pad string-tokenize))
@@ -38,7 +41,7 @@
       (exp-check (cdr exp)              ; if so, just push the symbol.
                  `(,@new-exp
                    ,(string->symbol (car exp)))))
-     (else                     ; Otherwise, pretend nothing happened.
+     (else                      ; Otherwise, pretend nothing happened.
       (print (tint "Unrecognised token: " 'red) (car exp))
       new-exp)))
 
@@ -47,16 +50,16 @@
       (print* (tint (string-pad (number->string step) (*padding*)) 'green))
       (print* (tint  ":"  'green)))
     (print
-           " "            (tint (cdr exp) 'cyan)
+     " "            (tint (cdr exp) 'cyan)
      (tint " -> " 'green) (tint (car exp)           'cyan)
      (tint " -> " 'green) (tint (reverse stack)     'cyan)))
 
   (define (calc-step exp stack step)
     (cond
-     ((null? exp) ; When we're done
-      (reverse stack))    ; just return the stack.
+     ((null? exp)                       ; When we're done
+      (reverse stack))                  ; just return the stack.
      (else
-      (if (*verbose*) ; this is ugly
+      (if (*verbose*)                   ; this is ugly
           (verbose-print exp stack step))
       (calc-step (cdr exp) (rpn:eval (car exp) stack) (+ 1 step)))))
 
@@ -74,7 +77,7 @@
     (define (rpn:read stack)
       (let ((line (read-line)))
         (cond ((eof-object? line)
-               stack)    ; exit on EOF
+               stack)                   ; exit on EOF
               ((zero? (string-length line))
                (rpn:read ; Nothing to read if the user just pressed return
                 stack))  ; pretend nothing happened.
