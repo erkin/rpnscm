@@ -1,5 +1,4 @@
 (require-extension (only srfi-37 args-fold option))
-(use (only extras format))
 (import rpn-parse rpn-doc rpn-colour)
 
 (define (rpn:version #!optional args) ; ignore arguments

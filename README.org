@@ -6,12 +6,12 @@ This is effectively a toy project for me to hack with CHICKEN Scheme.
 
 ** Extensions
    * =srfi-1=  (for =zip=)\dagger
-   * =srfi-13= (for =string-pad=, =string-pad-right=  & =string-tokenize=)\dagger
+   * =srfi-13= (for =string-pad=, =string-pad-right= & =string-tokenize=)\dagger
    * =srfi-37= (for =args-fold= & =option=)
 
 *** CHICKEN specific
    * =extras= (for =read-line=)
-   * =data-structures= (for =compose= and =->string=)
+   * =data-structures= (for =alist-ref=, =compose= & =->string=)
 
 ** Usage
 #+BEGIN_EXAMPLE
