@@ -59,7 +59,7 @@
      ((null? exp)                       ; When we're done
       (reverse stack))                  ; just return the stack.
      (else
-      (if (*verbose*)                   ; this is ugly
+      (if (or (*verbose*) (and (*repl*) (null? (cdr exp)))) ; this is ugly
           (verbose-print exp stack step))
       (calc-step (cdr exp) (rpn:eval (car exp) stack) (+ 1 step)))))
 
