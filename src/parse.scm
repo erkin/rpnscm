@@ -47,11 +47,12 @@
 
   (define (verbose-print exp stack step)
     (unless (*repl*)
-      (print* (tint (string-pad (number->string step) (*padding*)) 'green))
-      (print* (tint  ":"  'green)))
-    (print
-     " "            (tint (cdr exp) 'cyan)
-     (tint " -> " 'green) (tint (car exp)           'cyan)
+      (print* (tint (string-pad (number->string step) (*padding*)) 'green)
+              (tint  ":"  'green) " "
+              (tint (cdr exp) 'cyan)
+              (tint " -> " 'green)))
+    (print " "
+     (tint (car exp) 'cyan)
      (tint " -> " 'green) (tint (reverse stack)     'cyan)))
 
   (define (calc-step exp stack step)
@@ -59,7 +60,7 @@
      ((null? exp)                       ; When we're done
       (reverse stack))                  ; just return the stack.
      (else
-      (if (or (*verbose*) (and (*repl*) (null? (cdr exp)))) ; this is ugly
+      (if (or (*verbose*) (and (*repl*) (null? (cdr exp))))
           (verbose-print exp stack step))
       (calc-step (cdr exp) (rpn:eval (car exp) stack) (+ 1 step)))))
 
