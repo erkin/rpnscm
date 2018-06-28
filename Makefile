@@ -5,7 +5,7 @@ TARGET := rpn
 SRCDIR := src
 BUILDDIR := build
 
-all: build clean
+all: build clean run
 
 build: $(TARGET)
 
@@ -14,7 +14,10 @@ clean:
 	# csc doesn't have a flag to specify -J output
 	rm -f *.import.scm
 
-.PHONY: all build clean
+run: $(TARGET)
+	./$(TARGET)
+
+.PHONY: all build clean run
 
 $(BUILDDIR)/colour.o: $(SRCDIR)/colour.scm
 	$(CSC) -c -J -o $(BUILDDIR)/colour.o $(SRCDIR)/colour.scm

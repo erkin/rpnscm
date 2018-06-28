@@ -58,8 +58,8 @@
     (cond
      ((null? exp)                       ; When we're done
       (reverse stack))                  ; just return the stack.
-     (else
-      (if (or (*verbose*) (and (*repl*) (null? (cdr exp)))) ; this is ugly
+     (else ; Must be verbose to verbose-print.
+      (if (and (*verbose*) (not (*repl*))) ; Only run it in expression mode
           (verbose-print exp stack step))
       (calc-step (cdr exp) (rpn:eval (car exp) stack) (+ 1 step)))))
 
@@ -67,7 +67,7 @@
     (*verbose* verbose)
     (*repl* #f)
     (let ((exp (exp-check (string-tokenize expression) '())))
-      (when (*verbose*)       ; TODO make padding cleaner w/ alignment
+      (when (*verbose*) ; TODO make padding cleaner w/ alignment
         (*padding* (+ 1 (quotient (length exp) 10)))
         (print (tint "Input: " 'yellow) (tint exp 'cyan)))
       (print (if (*verbose*) (tint "Output: " 'yellow) "") (tint (calc-step exp '() 0) 'cyan)))
@@ -81,6 +81,9 @@
               ((zero? (string-length line))
                (rpn:read ; Nothing to read if the user just pressed return
                 stack))  ; pretend nothing happened.
+              ((*verbose*)
+               ((lambda (x) (print (tint x 'yellow)) (rpn:read x))
+                (calc-step (exp-check (string-tokenize line) stack) '() 0)))
               (else
                (rpn:read
                 (calc-step (exp-check (string-tokenize line) stack) '() 0))))))
