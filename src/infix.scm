@@ -1,0 +1,31 @@
+(declare (unit rpn-infix))
+(declare (uses rpn-parse))
+(declare (uses rpn-colour))
+(module rpn-infix (rpn:infix)
+  (import chicken scheme)
+  (require-extension (only srfi-13 string-tokenize))
+  (import rpn-parse)
+  (import rpn-colour)
+
+  (define (rpn:shunt tokens stack queue)
+    (print "Tokens: " tokens) ; temporarily verbose
+    (print "Stack: " stack)
+    (print "Queue: " queue)
+    (newline)
+    (define (higher? token0 token1)
+      (define opers '(% * / - +))
+      (>= (length (memv token0 opers))
+          (length (memv token1 opers))))
+    (cond
+     ((null? tokens)
+      (append queue stack))
+     ((number? (car tokens))
+      (rpn:shunt (cdr tokens) stack (cons (car tokens) queue)))
+     ((or (null? stack) (higher? (car tokens) (car stack)))
+      (rpn:shunt (cdr tokens) (cons (car tokens) stack) queue))
+     (else
+      (rpn:shunt (cdr tokens) (cons (car tokens) (cdr stack)) (cons (car stack) queue)))))
+
+  (define (rpn:infix expression)
+    (print (tint (rpn:shunt (rpn:exp-check (string-tokenize expression) '()) '() '()) 'cyan))
+    (exit)))

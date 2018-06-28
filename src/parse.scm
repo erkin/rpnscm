@@ -1,7 +1,7 @@
 (declare (unit rpn-parse))
 (declare (uses rpn-op))
 (declare (uses rpn-colour))
-(module rpn-parse (rpn:calculate rpn:repl)
+(module rpn-parse (rpn:calculate rpn:repl rpn:exp-check)
   (import chicken scheme)
   (require-extension (only srfi-13 string-pad string-tokenize))
   (use (only extras read-line))
@@ -11,11 +11,11 @@
   ;; first tokenises the expression:
   ;; "1 2.08 +" -> ("1" "2.08" "+")
 
-  ;; Then calls `exp-check` to check for unrecognised tokens
+  ;; Then calls `rpn:exp-check` to check for unrecognised tokens
   ;; and to round inexact numbers to integers:
   ;; ("1" "2.08" "+") -> (1 2 '+)
   
-  ;; The list returned by `exp-check` is then passed to
+  ;; The list returned by `rpn:exp-check` is then passed to
   ;; `calc-step` which iterates recursively applies `rpn:eval` (in rpn-op)
   ;; (1 2 '+) -> (rpn:eval '(1 2) '+)
   
@@ -29,16 +29,16 @@
   (define *verbose* (make-parameter #f))
   (define *repl*    (make-parameter #f))
 
-  (define (exp-check exp new-exp)
+  (define (rpn:exp-check exp new-exp)
     (cond
      ((null? exp)                   ; If there are no values,
       new-exp)                      ; just return what we have so far.
      ((string->number (car exp))    ; Is it a number?
-      (exp-check (cdr exp)     ; If so, make sure it's round and exact
+      (rpn:exp-check (cdr exp)     ; If so, make sure it's round and exact
                  `(,@new-exp   ; then push it and keep going.
                    ,(inexact->exact (round (string->number (car exp)))))))
      ((assoc (string->symbol (car exp)) rpn:operators) ; Is it an operator?
-      (exp-check (cdr exp)              ; if so, just push the symbol.
+      (rpn:exp-check (cdr exp)              ; if so, just push the symbol.
                  `(,@new-exp
                    ,(string->symbol (car exp)))))
      (else                      ; Otherwise, pretend nothing happened.
@@ -66,7 +66,7 @@
   (define (rpn:calculate expression #!optional (verbose #f))
     (*verbose* verbose)
     (*repl* #f)
-    (let ((exp (exp-check (string-tokenize expression) '())))
+    (let ((exp (rpn:exp-check (string-tokenize expression) '())))
       (when (*verbose*) ; TODO make padding cleaner w/ alignment
         (*padding* (+ 1 (quotient (length exp) 10)))
         (print (tint "Input: " 'yellow) (tint exp 'cyan)))
@@ -83,10 +83,10 @@
                 stack))  ; pretend nothing happened.
               ((*verbose*)
                ((lambda (x) (print (tint x 'yellow)) (rpn:read x))
-                (calc-step (exp-check (string-tokenize line) stack) '() 0)))
+                (calc-step (rpn:exp-check (string-tokenize line) stack) '() 0)))
               (else
                (rpn:read
-                (calc-step (exp-check (string-tokenize line) stack) '() 0))))))
+                (calc-step (rpn:exp-check (string-tokenize line) stack) '() 0))))))
     (*verbose* verbose)
     (*repl* #t)
     (print

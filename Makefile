@@ -10,7 +10,7 @@ all: build clean run
 build: $(TARGET)
 
 clean:
-	rm -f $(BUILDDIR)/*
+	rm -f $(BUILDDIR)/*.o
 	# csc doesn't have a flag to specify -J output
 	rm -f *.import.scm
 
@@ -28,8 +28,11 @@ $(BUILDDIR)/op.o: $(SRCDIR)/op.scm $(BUILDDIR)/colour.o
 $(BUILDDIR)/parse.o: $(SRCDIR)/parse.scm $(BUILDDIR)/op.o $(BUILDDIR)/colour.o
 	$(CSC) -c -J -o $(BUILDDIR)/parse.o $(SRCDIR)/parse.scm
 
+$(BUILDDIR)/infix.o: $(SRCDIR)/infix.scm $(BUILDDIR)/parse.o $(BUILDDIR)/colour.o
+	$(CSC) -c -J -o $(BUILDDIR)/infix.o $(SRCDIR)/infix.scm
+
 $(BUILDDIR)/doc.o: $(SRCDIR)/doc.scm $(BUILDDIR)/colour.o
 	$(CSC) -c -J -o $(BUILDDIR)/doc.o $(SRCDIR)/doc.scm
 
-$(TARGET): $(SRCDIR)/main.scm $(BUILDDIR)/doc.o $(BUILDDIR)/parse.o $(BUILDDIR)/colour.o $(BUILDDIR)/op.o
+$(TARGET): $(SRCDIR)/main.scm $(BUILDDIR)/doc.o $(BUILDDIR)/parse.o $(BUILDDIR)/colour.o $(BUILDDIR)/op.o $(BUILDDIR)/infix.o
 	$(CSC) $^ -o $@

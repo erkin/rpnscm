@@ -1,8 +1,9 @@
 (declare (uses rpn-doc))
 (declare (uses rpn-parse))
 (declare (uses rpn-colour))
+(declare (uses rpn-infix))
 (require-extension (only srfi-37 args-fold option))
-(import rpn-parse rpn-doc rpn-colour)
+(import rpn-parse rpn-doc rpn-colour rpn-infix)
 
 (define (rpn:version #!optional args) ; ignore arguments
   (print   (tint "rpnscm v0.18" 'cyan #:style 'bold))
@@ -33,8 +34,8 @@
      "Unrecognised "
      (case unrecognised
        ((long)    (string-append "argument: " (tint (string-append "--" name) 'yellow)))
-       ((short)   (string-append "option: "  (tint (string #\- name) 'yellow)))
-       ((operand) (string-append "operand: " (tint opt 'yellow)))))
+       ((short)   (string-append "option: "   (tint (string #\- name) 'yellow)))
+       ((operand) (string-append "operand: "  (tint opt 'yellow)))))
     (newline))
   (print* (tint "Usage: " 'green))
   (print  (car (argv)) " -e " (tint "\"EXPRESSION\"" 'yellow))
@@ -77,7 +78,7 @@
            (lambda (opt name arg seed)
              (if (not arg)
                  (rpn:err "No expression provided."))
-             (print "This is a stub. Sorry.")))))
+             (rpn:infix arg)))))
 
 (define (main args)
   (if (pair? args)
