@@ -6,7 +6,7 @@
 (import rpn-parse rpn-doc rpn-colour rpn-infix)
 
 (define (rpn:version #!optional args) ; ignore arguments
-  (print   (tint "rpnscm v0.18" 'cyan #:style 'bold))
+  (print   (tint "rpnscm v0.19" 'cyan #:style 'bold))
   (print   (tint "Copyright (C) 2018 Erkin Batu Altunbaş" 'cyan))
   (newline)
   (print* "Each file of this project's source code is subject ")
