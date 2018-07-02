@@ -24,7 +24,7 @@
        ("-s, --shunt EXPRESSION" "Convert infix EXPRESSION to RPN")
        ("-v, --verbose"          "Explain each step"))))
 
-  (define rpn:maths-operators
+  (define-constant rpn:maths-operators
     '(("n" "( i ->   i)" "Negation")
       ("@" "( i ->   i)" "Absolute value")
       ("s" "( i ->   i)" "Signum")
@@ -39,14 +39,14 @@
       ("m" "( n ->   i)" "Discard all but minimum")
       ("M" "( n ->   i)" "Discard all but maximum")))
 
-  (define rpn:stack-operators
+  (define-constant rpn:stack-operators
     '((! "( i -> nil)" "Pop")
       (? "( i ->   i)" "Peek")
       (: "( i ->  ii)" "Dup")
       (~ "(ii ->  ii)" "Swap")
       ($ "( n -> nil)" "Empty")))
 
-  (define rpn:notation
+  (define-constant rpn:notation
     '(("(nil ->    )" "New value")
       ("( i  ->    )" "Pop one")
       ("(ii  ->    )" "Pop two")

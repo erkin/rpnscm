@@ -3,7 +3,7 @@
   (import chicken scheme)
   (use (only data-structures ->string alist-ref))
 
-  (define ansi-colours
+  (define-constant ansi-colours
     '((black   . "0")
       (red     . "1")
       (green   . "2")
@@ -14,7 +14,7 @@
       (white   . "7")
       (default . "9")))
 
-  (define ansi-styles
+  (define-constant ansi-styles
     '((regular    .  "0")
       (bold       .  "1")
       (faint      .  "2")
