@@ -78,7 +78,7 @@
     (define (rpn:read stack)
       (let ((line (read-line)))
         (cond ((eof-object? line)
-               stack)                   ; exit on EOF
+               stack)    ; exit on EOF
               ((zero? (string-length line))
                (rpn:read ; Nothing to read if the user just pressed return
                 stack))  ; pretend nothing happened.

@@ -1,8 +1,8 @@
 * RPNSCM v0.19
-A primitive (but future-rich in near future, probably) RPN calculator written in Scheme.
-(Development branch.)
+  A primitive (but future-rich in near future, probably) RPN calculator written in Scheme.
+  (Development branch.)
 
-This is effectively a toy project for me to hack with CHICKEN Scheme.
+  This is effectively a toy project for me to hack with CHICKEN Scheme.
 
 ** Extensions
    * =srfi-1=  (for =zip=)\dagger
@@ -10,47 +10,49 @@ This is effectively a toy project for me to hack with CHICKEN Scheme.
    * =srfi-37= (for =args-fold= & =option=)
 
 *** CHICKEN specific
-   * =extras= (for =read-line=)
-   * =data-structures= (for =alist-ref=, =compose= & =->string=)
+    * =extras= (for =read-line=)
+    * =data-structures= (for =alist-ref=, =compose= & =->string=)
 
 ** Usage
-#+BEGIN_EXAMPLE
-rpn -e "EXPRESSION"
-#+END_EXAMPLE
-See =--help= for options and =--operators=
-for a list of operations (and what they do).
+   #+BEGIN_EXAMPLE
+   rpn -e "EXPRESSION"
+   #+END_EXAMPLE
+   See =--help= for options and =--operators=
+   for a list of operations (and what they do).
 
 *** Example
-#+BEGIN_EXAMPLE
-% ./rpn -e "4 3 % 7 7 * * 2 / 10 -" 
-(14)
+    #+BEGIN_EXAMPLE
+    % ./rpn -e "4 3 % 7 7 * * 2 / 10 -" 
+    (14)
 
-% ./rpn -i
-5 5 +
-8 2 *
-!
- 16
-^D
-(10)
+    % ./rpn -i
+    5 5 +
+    8 2 *
+    !
+     16
+    ^D
+    (10)
 
-% ./rpn -v -e "4 3 % 7 7 * * 2 / 10 -" 
-Input: (4 3 % 7 7 * * 2 / 10 -)
- 0: (3 % 7 7 * * 2 / 10 -) -> 4 -> ()
- 1: (% 7 7 * * 2 / 10 -) -> 3 -> (4)
- 2: (7 7 * * 2 / 10 -) -> % -> (4 3)
- 3: (7 * * 2 / 10 -) -> 7 -> (1)
- 4: (* * 2 / 10 -) -> 7 -> (1 7)
- 5: (* 2 / 10 -) -> * -> (1 7 7)
- 6: (2 / 10 -) -> * -> (7 7)
- 7: (/ 10 -) -> 2 -> (49)
- 8: (10 -) -> / -> (49 2)
- 9: (-) -> 10 -> (24)
-10: () -> - -> (24 10)
-Output: (14)
-#+END_EXAMPLE
+    % ./rpn -v -e "4 3 % 7 7 * * 2 / 10 -" 
+    Input: (4 3 % 7 7 * * 2 / 10 -)
+     0: (3 % 7 7 * * 2 / 10 -) -> 4 -> ()
+     1: (% 7 7 * * 2 / 10 -) -> 3 -> (4)
+     2: (7 7 * * 2 / 10 -) -> % -> (4 3)
+     3: (7 * * 2 / 10 -) -> 7 -> (1)
+     4: (* * 2 / 10 -) -> 7 -> (1 7)
+     5: (* 2 / 10 -) -> * -> (1 7 7)
+     6: (2 / 10 -) -> * -> (7 7)
+     7: (/ 10 -) -> 2 -> (49)
+     8: (10 -) -> / -> (49 2)
+     9: (-) -> 10 -> (24)
+    10: () -> - -> (24 10)
+    Output: (14)
+    #+END_EXAMPLE
 
 ** Note
-Only integers are supported for the time being.
-Inexact numbers get rounded to the nearest exact integer.
+   Uses CHICKEN 4.
+   
+   Only integers are supported for the time being.
+   Inexact numbers get rounded to the nearest exact integer.
 
-\dagger: A built-in =unit= in CHICKEN.
+   \dagger: A built-in =unit= in CHICKEN.
