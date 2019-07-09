@@ -1,4 +1,4 @@
-CSC := csc -d2 -O0
+CSC := chicken-csc -d2 -O0
 
 TARGET := rpn
 

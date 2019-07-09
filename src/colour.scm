@@ -1,7 +1,9 @@
 (declare (unit rpn-colour))
+
 (module rpn-colour (tint tint-list)
-  (import chicken scheme)
-  (use (only data-structures ->string alist-ref))
+  (import scheme
+          (chicken base)
+          (chicken string))
 
   (define ansi-colours
     '((black   . "0")

@@ -1,10 +1,11 @@
 (declare (unit rpn-doc))
 (declare (uses rpn-colour))
+
 (module rpn-doc (rpn:operator-usage rpn:help-messages)
-  (import chicken scheme)
-  (require-extension (only srfi-13 string-pad-right))
-  (require-extension (only srfi-1 zip))
-  (use (only data-structures compose))
+  (import scheme
+          (chicken base))
+  (import (only srfi-13 string-pad-right)
+          (only srfi-1 zip))
   (import rpn-colour)
 
   (define (list-pad-by-max s-lst) ; surely there's a better way to do this

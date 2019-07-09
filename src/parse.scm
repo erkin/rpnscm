@@ -1,10 +1,12 @@
 (declare (unit rpn-parse))
 (declare (uses rpn-op))
 (declare (uses rpn-colour))
+
 (module rpn-parse (rpn:calculate rpn:repl)
-  (import chicken scheme)
-  (require-extension (only srfi-13 string-pad string-tokenize))
-  (use (only extras read-line))
+  (import scheme
+          (chicken base)
+          (chicken io))
+  (import (only srfi-13 string-pad string-tokenize))
   (import rpn-op rpn-colour)
 
   ;; Our entrance point, `rpn:calculate` or `rpn:repl`,

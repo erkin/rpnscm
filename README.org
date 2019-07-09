@@ -1,17 +1,13 @@
-* RPNSCM v0.17
+* RPNSCM v0.18
   A primitive (but future-rich in near future, probably) RPN calculator written in Scheme.
   Check the development branch for latest stuff.
 
   This is effectively a toy project for me to hack with CHICKEN Scheme.
 
-** Extensions
-   * =srfi-1=  (for =zip=)\dagger
-   * =srfi-13= (for =string-pad=, =string-pad-right= & =string-tokenize=)\dagger
+** Required extensions
+   * =srfi-1=  (for =zip=)
+   * =srfi-13= (for =string-pad=, =string-pad-right= & =string-tokenize=)
    * =srfi-37= (for =args-fold= & =option=)
-
-*** CHICKEN specific
-    * =extras= (for =read-line=)
-    * =data-structures= (for =alist-ref=, =compose= & =->string=)
 
 ** Usage
    #+BEGIN_EXAMPLE
@@ -50,9 +46,5 @@
     #+END_EXAMPLE
 
 ** Note
-   Uses CHICKEN 4.
-   
    Only integers are supported for the time being.
    Inexact numbers get rounded to the nearest exact integer.
-
-   \dagger: A built-in =unit= in CHICKEN.

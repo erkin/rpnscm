@@ -1,9 +1,10 @@
 (declare (unit rpn-op))
 (declare (uses rpn-colour))
+
 (module rpn-op (rpn:eval rpn:operators)
-  (import chicken scheme)
+  (import scheme
+          (chicken base))
   (import rpn-colour)
-  (use (only data-structures alist-ref))
 
 ;;; Monadic operators
   ;; negate

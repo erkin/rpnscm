@@ -1,12 +1,14 @@
 (declare (uses rpn-doc))
 (declare (uses rpn-parse))
 (declare (uses rpn-colour))
-(require-extension (only srfi-37 args-fold option))
+
+(import (chicken process-context))
+(import (only srfi-37 args-fold option))
 (import rpn-parse rpn-doc rpn-colour)
 
 (define (rpn:version #!optional args) ; ignore arguments
-  (print   (tint "rpnscm v0.17" 'cyan #:style 'bold))
-  (print   (tint "Copyright (C) 2018 Erkin Batu Altunbaş" 'cyan))
+  (print   (tint "rpnscm v0.18" 'cyan #:style 'bold))
+  (print   (tint "Copyright (C) 2019 Erkin Batu Altunbaş" 'cyan))
   (newline)
   (print* "Each file of this project's source code is subject ")
   (print  "to the terms of the Mozilla Public Licence v2.0")
@@ -60,24 +62,25 @@
            rpn:operator-usage)
    (option '(#\e "eval" "evaluate") #t #f
            (lambda (opt name arg seed)
-             (if (not arg)
-                 (rpn:err "No expression provided."))
+             (when (not arg)
+               (rpn:err "No expression provided."))
              (rpn:calculate arg (eq? seed 'verbose))))
    (option '(#\i "interactive" "repl") #f #f
            (lambda (opt name arg seed)
              (rpn:repl (eq? seed 'verbose))))
    (option '(#\f "file") #t #f
            (lambda (opt name arg seed)
-             (if (not arg)
-                 (rpn:err "No filename specified."))
+             (when (not arg)
+               (rpn:err "No filename specified."))
              (rpn:calculate
               (with-input-from-file arg read-string)
               (eq? seed 'verbose))))
    (option '(#\s "shunt") #t #f
            (lambda (opt name arg seed)
-             (if (not arg)
-                 (rpn:err "No expression provided."))
-             (print "This is a stub. Sorry.")))))
+             (when (not arg)
+               (rpn:err "No expression provided."))
+             (print "This is a stub. Sorry.")
+             (exit)))))
 
 (define (main args)
   (if (pair? args)
